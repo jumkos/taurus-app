@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use App\Models\User;
+
+class VerifyEmailController extends Controller
+{
+
+    public function __invoke(Request $request): RedirectResponse
+    {
+        $user = User::find($request->route('id'));
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect(env('FRONT_URL') . '/api/get-user');
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return redirect(env('FRONT_URL') . '/api/get-user');
+    }
+
+    public function resend(Request $request)
+    {
+        $user = User::where('email',$request->input('email'))->first();
+
+        $user->sendEmailVerificationNotification();
+
+        $response = ['message' => 'New email verification has ben sent'];
+        return response($response, 200);
+    }
+}

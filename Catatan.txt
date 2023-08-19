@@ -1,0 +1,7 @@
+Create token passport
+php artisan passport:install
+
+Zoom 2023-08-13
+Referal dengan uniq code id
+login dengan NIP
+
