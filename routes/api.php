@@ -49,5 +49,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('logout', [PassportAuthController::class, 'logout']);
         Route::post('update-password', [PassportAuthController::class, 'updatePassword']);
         Route::post('create-referral', [ReferralController::class, 'createReferral']);
+        Route::post('update-referral-sts', [ReferralController::class, 'updateReferralStatus']);
     });
 });

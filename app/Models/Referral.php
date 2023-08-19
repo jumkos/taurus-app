@@ -21,4 +21,11 @@ class Referral extends Model
         'nominal',
         'info',
     ];
+
+    public function getRefID()
+    {
+        $id = $this->id;
+        $alphabet = range('A', 'Z');
+        return sprintf('%s-%05d%s', $alphabet[substr($id, -1)], $this->id, $alphabet[substr($id, 0, 1)]);
+    }
 }

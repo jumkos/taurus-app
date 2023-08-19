@@ -90,4 +90,28 @@ class ReferralController extends Controller
         $response = ['message' => 'New Refferal has ben sent'];
         return response($response, 200);
     }
+
+    public function updateReferralStatus (Request $request) {
+        $validator = Validator::make($request->all(), [
+            'referral_id' => 'required|integer',
+            'status' => 'required|integer',
+            'detail' => 'required|string',
+        ]);
+        if ($validator->fails())
+        {
+            return response(['errors'=>$validator->errors()->all()], 422);
+        }
+
+        //save referral status
+        $newReferralStatus = array(
+            "referral_id" => $request['referral_id'],
+            "date" => date('Y-m-d H:i:s'),
+            "status_id" => $request['status'],
+            "detail" => $request['detail'],
+        );
+        ReferralStatus::create($newReferralStatus);
+
+        $response = ['message' => 'Refferal status has ben updated'];
+        return response($response, 200);
+    }
 }
