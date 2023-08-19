@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\PassportAuthController;
+use App\Http\Controllers\API\ReferralController;
 use App\Http\Controllers\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -47,5 +48,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('get-user', [PassportAuthController::class, 'userInfo']);
         Route::get('logout', [PassportAuthController::class, 'logout']);
         Route::post('update-password', [PassportAuthController::class, 'updatePassword']);
+        Route::post('create-referral', [ReferralController::class, 'createReferral']);
     });
 });

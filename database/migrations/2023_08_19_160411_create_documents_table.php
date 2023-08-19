@@ -16,7 +16,6 @@ return new class extends Migration
             $table->timestamps();
             $table->bigInteger('referral_id');
             $table->string('name');
-            $table->string('path');
         });
     }
 

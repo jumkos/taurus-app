@@ -11,6 +11,5 @@ class Document extends Model
     protected $fillable = [
         'referral_id',
         'name',
-        'path',
     ];
 }
