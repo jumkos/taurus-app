@@ -51,11 +51,9 @@ class ReferralController extends Controller
         $referral = Referral::create($newReferral);
 
         //save document
-        $response = ['message' => 'New Refferal has ben sent'];
         if ($request->hasFile('files')) {
             foreach($request->file('files') as $file)
             {
-                $response = ['anu2' => 'anu2'];
                 //get filename with extension
                 $filenamewithextension = $file->getClientOriginalName();
 
@@ -89,7 +87,7 @@ class ReferralController extends Controller
         );
         ReferralStatus::create($newReferralStatus);
 
-        // $response = ['message' => 'New Refferal has ben sent'];
+        $response = ['message' => 'New Refferal has ben sent'];
         return response($response, 200);
     }
 }
