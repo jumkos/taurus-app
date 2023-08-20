@@ -16,15 +16,16 @@ return new class extends Migration
             $table->timestamps();
             $table->bigInteger('issuer_id');
             $table->bigInteger('refer_id');
-            $table->string('cust_name');
-            $table->string('phone');
-            $table->string('address');
+            $table->string('cust_name', 250);
+            $table->string('phone', 15);
+            $table->string('address', 1000);
             $table->dateTime('offering_date');
             $table->bigInteger('product_type_id');
             $table->bigInteger('product_category_id');
             $table->bigInteger('product_id');
-            $table->decimal('nominal', 15, 2);
-            $table->string('info');
+            $table->string('product_detail', 250);
+            $table->bigInteger('nominal');
+            $table->string('info', 1000);
         });
     }
 

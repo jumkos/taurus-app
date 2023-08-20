@@ -14,9 +14,45 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(10)->create();
 
-        // \App\Models\User::factory()->create([
+        // \App\Models\User::create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        \App\Models\StatusParameter::create([
+            'name' => 'Assign to Marketing',
+            'parrent_id' => 0,
+        ]);
+        \App\Models\StatusParameter::create([
+            'name' => 'Contacted',
+            'parrent_id' => 1,
+        ]);
+        \App\Models\StatusParameter::create([
+            'name' => 'Data Collection',
+            'parrent_id' => 2,
+        ]);
+        \App\Models\StatusParameter::create([
+            'name' => 'Sent for Approval',
+            'parrent_id' => 3,
+        ]);
+        \App\Models\StatusParameter::create([
+            'name' => 'Reject',
+            'parrent_id' => 2,
+        ]);
+        \App\Models\StatusParameter::create([
+            'name' => 'Not Approved',
+            'parrent_id' => 4,
+        ]);
+        \App\Models\StatusParameter::create([
+            'name' => 'Approve',
+            'parrent_id' => 4,
+        ]);
+
+        $this->call([
+            DivisionSeeder::class,
+            ProductSeeder::class,
+            RegionSeeder::class,
+            BranchSeeder::class,
+        ]);
     }
 }

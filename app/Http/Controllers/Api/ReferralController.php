@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Document;
 use App\Models\Referral;
 use App\Models\ReferralStatus;
+use App\Models\StatusParameter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -17,15 +18,16 @@ class ReferralController extends Controller
         $validator = Validator::make($request->all(), [
             'issuer_id' => 'required|integer',
             'refer_id' => 'required|integer',
-            'cust_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
+            'cust_name' => 'required|string|max:250',
+            'phone' => 'required|string|max:15',
+            'address' => 'required|string|max:1000',
             'offering_date' => 'required|date',
             'product_type_id' => 'required|integer',
             'product_category_id' => 'required|integer',
             'product_id' => 'required|integer',
-            'nominal' => 'required|decimal:2',
-            'info' => 'required|string',
+            'product_detail' => 'required|string|max:250',
+            'nominal' => 'required|numeric',
+            'info' => 'required|string|max:1000',
             'files' => 'required',
             'files.*' => 'required|max:2048',
         ]);
@@ -79,11 +81,12 @@ class ReferralController extends Controller
         }
 
         //save referral status
+        $statusParam = StatusParameter::where('id',1);
         $newReferralStatus = array(
             "referral_id" => $referral -> id,
             "date" => date('Y-m-d H:i:s'),
-            "status_id" => 1,
-            "detail" => 'Approval request sent',
+            "status_id" => $statusParam -> id,
+            "detail" => $statusParam -> name,
         );
         ReferralStatus::create($newReferralStatus);
 
