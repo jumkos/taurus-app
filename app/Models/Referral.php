@@ -20,6 +20,7 @@ class Referral extends Model
         'product_id',
         'nominal',
         'info',
+        'product_detail',
     ];
 
     public function getRefID()

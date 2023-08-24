@@ -49,6 +49,7 @@ class ReferralController extends Controller
             "product_id" => $request['product_id'],
             "nominal" => $request['nominal'],
             "info" => $request['info'],
+            "product_detail" => $request['product_detail']
         );
         $referral = Referral::create($newReferral);
 
@@ -81,12 +82,11 @@ class ReferralController extends Controller
         }
 
         //save referral status
-        $statusParam = StatusParameter::where('id',1);
         $newReferralStatus = array(
             "referral_id" => $referral -> id,
             "date" => date('Y-m-d H:i:s'),
-            "status_id" => $statusParam -> id,
-            "detail" => $statusParam -> name,
+            "status_id" => 1,
+            "detail" => 'Received',
         );
         ReferralStatus::create($newReferralStatus);
 
