@@ -8,6 +8,7 @@ use App\Models\Referral;
 use App\Models\ReferralStatus;
 use App\Models\StatusParameter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -115,6 +116,39 @@ class ReferralController extends Controller
         ReferralStatus::create($newReferralStatus);
 
         $response = ['message' => 'Refferal status has ben updated'];
+        return response($response, 200);
+    }
+
+    public function getListProductType() {
+        $productTypes = DB::table('product_types')
+                        ->select('id','name')
+                        ->get();
+        $response = ['product_types' => $productTypes];
+        return response($response, 200);
+    }
+
+    public function getListProductCategory($productTypeId) {
+        $productCategories = DB::table('product_categories')
+                        ->select('id','name')
+                        ->where('product_types_id', $productTypeId)
+                        ->get();
+        if($productCategories->isEmpty()){
+            return response('Not Found',404);
+        }
+        $response = ['product_categories' => $productCategories];
+        return response($response, 200);
+    }
+
+    public function getListStatusReferral($currentStatusId) {
+        $statusReferral = DB::table('status_parameters')
+                        ->select('id','name')
+                        ->where('parrent_id', $currentStatusId)
+                        ->get();
+
+        if($statusReferral->isEmpty()){
+            return response('Not Found',404);
+        }
+        $response = ['status' => $statusReferral];
         return response($response, 200);
     }
 }
