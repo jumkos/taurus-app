@@ -7,6 +7,8 @@ use App\Models\Document;
 use App\Models\Referral;
 use App\Models\ReferralStatus;
 use App\Models\StatusParameter;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -15,7 +17,8 @@ use Illuminate\Support\Facades\Validator;
 class ReferralController extends Controller
 {
 
-    public function createReferral (Request $request) {
+    public function createReferral(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'issuer_id' => 'required|integer',
             'refer_id' => 'required|integer',
@@ -32,9 +35,8 @@ class ReferralController extends Controller
             'files' => 'required',
             'files.*' => 'required|max:2048',
         ]);
-        if ($validator->fails())
-        {
-            return response(['errors'=>$validator->errors()->all()], 422);
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
         }
 
         //save referral
@@ -56,8 +58,7 @@ class ReferralController extends Controller
 
         //save document
         if ($request->hasFile('files')) {
-            foreach($request->file('files') as $file)
-            {
+            foreach ($request->file('files') as $file) {
                 //get filename with extension
                 $filenamewithextension = $file->getClientOriginalName();
 
@@ -68,14 +69,14 @@ class ReferralController extends Controller
                 $extension = $file->getClientOriginalExtension();
 
                 //filename to store
-                $filenametostore = $filename.'_'.uniqid().'.'.$extension;
+                $filenametostore = $filename . '_' . uniqid() . '.' . $extension;
 
                 //Upload File to external server
                 Storage::disk('ftp')->put($filenametostore, fopen($file, 'r+'));
 
                 //Store $filenametostore in the database
                 $newDocument = array(
-                    "referral_id" => $referral -> id,
+                    "referral_id" => $referral->id,
                     "name" => $filenametostore,
                 );
                 Document::create($newDocument);
@@ -84,7 +85,7 @@ class ReferralController extends Controller
 
         //save referral status
         $newReferralStatus = array(
-            "referral_id" => $referral -> id,
+            "referral_id" => $referral->id,
             "date" => date('Y-m-d H:i:s'),
             "status_id" => 1,
             "detail" => 'Received',
@@ -95,15 +96,15 @@ class ReferralController extends Controller
         return response($response, 200);
     }
 
-    public function updateReferralStatus (Request $request) {
+    public function updateReferralStatus(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'referral_id' => 'required|integer',
             'status' => 'required|integer',
             'detail' => 'required|string',
         ]);
-        if ($validator->fails())
-        {
-            return response(['errors'=>$validator->errors()->all()], 422);
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
         }
 
         //save referral status
@@ -119,36 +120,124 @@ class ReferralController extends Controller
         return response($response, 200);
     }
 
-    public function getListProductType() {
+    public function getListProductType()
+    {
         $productTypes = DB::table('product_types')
-                        ->select('id','name')
-                        ->get();
+            ->select('id', 'name')
+            ->get();
         $response = ['product_types' => $productTypes];
         return response($response, 200);
     }
 
-    public function getListProductCategory($productTypeId) {
+    public function getListProductCategory($productTypeId)
+    {
         $productCategories = DB::table('product_categories')
-                        ->select('id','name')
-                        ->where('product_types_id', $productTypeId)
-                        ->get();
-        if($productCategories->isEmpty()){
-            return response('Not Found',404);
+            ->select('id', 'name')
+            ->where('product_types_id', $productTypeId)
+            ->get();
+        if ($productCategories->isEmpty()) {
+            return response('Not Found', 404);
         }
         $response = ['product_categories' => $productCategories];
         return response($response, 200);
     }
 
-    public function getListStatusReferral($currentStatusId) {
+    public function getListStatusReferral($currentStatusId)
+    {
         $statusReferral = DB::table('status_parameters')
-                        ->select('id','name')
-                        ->where('parrent_id', $currentStatusId)
-                        ->get();
+            ->select('id', 'name')
+            ->where('parrent_id', $currentStatusId)
+            ->get();
 
-        if($statusReferral->isEmpty()){
-            return response('Not Found',404);
+        if ($statusReferral->isEmpty()) {
+            return response('Not Found', 404);
         }
         $response = ['status' => $statusReferral];
+        return response($response, 200);
+    }
+
+    public function getListDivision()
+    {
+        $divisions = DB::table('divisions')
+            ->select('id', 'name')
+            ->get();
+        $response = ['divisions' => $divisions];
+        return response($response, 200);
+    }
+
+    public function getListRegion()
+    {
+        $regions = DB::table('regions')
+            ->select('id', 'name')
+            ->get();
+        $response = ['regions' => $regions];
+        return response($response, 200);
+    }
+
+    public function getListBranch($regionId)
+    {
+        $branches = DB::table('branches')
+            ->select('id', 'name')
+            ->where('regions_id', $regionId)
+            ->get();
+        $response = ['branches' => $branches];
+        return response($response, 200);
+    }
+
+    public function getListToReferName($divisionId, $regionId, $branchLocationId)
+    {
+        $referNames = DB::table('user_details')
+            ->select('user_id', 'name')
+            ->where('division_id', $divisionId)
+            ->where('region_id', $regionId)
+            ->where('branch_location_id', $branchLocationId)
+            ->get();
+        $response = ['referNames' => $referNames];
+        return response($response, 200);
+    }
+
+    public function getMyListReferal()
+    {
+        $user = auth()->user();
+
+        $myListReferal = DB::table('referrals as r')
+            ->join(DB::raw('(
+            SELECT REFERRAL_ID, MAX(`date`) AS MAX_STATUS_DATE
+            FROM referral_statuses
+            GROUP BY REFERRAL_ID
+        ) latest_status'), 'r.id', '=', 'latest_status.REFERRAL_ID')
+            ->join('referral_statuses as rs', function ($join) {
+                $join->on('r.id', '=', 'rs.REFERRAL_ID')
+                    ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
+            })
+            ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
+            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
+            ->where('r.issuer_id', $user->id)
+            ->get();
+        $response = ['myListReferal' => $myListReferal];
+        return response($response, 200);
+    }
+
+    public function getTrackingDetail($referralId)
+    {
+        $tracking = DB::table('referrals as r')
+            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->join('divisions as d', 'd.id', '=', 'ud.division_id')
+            ->select('r.cust_name', 'r.phone', 'r.address', 'ud.name as refer_name', 'd.name as refer_division')
+            ->where('r.id', $referralId)
+            ->first();
+
+        $dt = DB::table('referral_statuses as rs')
+                    ->join('status_parameters as s', 'rs.status_id', '=', 's.id')
+                    ->join('referrals as r', 'rs.referral_id', '=', 'r.id')
+                    ->select('rs.date', 'rs.detail as remark', 's.name as status')
+                    ->where('r.id', $referralId)
+                    ->orderBy('rs.date', 'asc')
+                    ->get();
+
+        $tracking -> detail = $dt;
+        $response = ['tracking' => $tracking];
         return response($response, 200);
     }
 }

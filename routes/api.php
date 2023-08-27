@@ -50,9 +50,15 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('update-password', [PassportAuthController::class, 'updatePassword']);
         Route::post('create-referral', [ReferralController::class, 'createReferral']);
         Route::post('update-referral-sts', [ReferralController::class, 'updateReferralStatus']);
-        Route::get('get-product-type', [ReferralController::class, 'getListProductType']);
-        Route::get('get-product-categories/{productTypeId}', [ReferralController::class, 'getListProductCategory']);
-        Route::get('get-status-referral/{currentStatusId}', [ReferralController::class, 'getListStatusReferral']);
+        Route::get('list-product-type', [ReferralController::class, 'getListProductType']);
+        Route::get('list-product-categories/{productTypeId}', [ReferralController::class, 'getListProductCategory']);
+        Route::get('list-status-referral/{currentStatusId}', [ReferralController::class, 'getListStatusReferral']);
+        Route::get('list-divisoin', [ReferralController::class, 'getListDivision']);
+        Route::get('list-region', [ReferralController::class, 'getListRegion']);
+        Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
+        Route::get('list-refer-name/{divisionId}/{regionId}/{branchLocationId}', [ReferralController::class, 'getListToReferName']);
+        Route::get('list-my-referal', [ReferralController::class, 'getMyListReferal']);
+        Route::get('get-tracking-detail/{referralId}', [ReferralController::class, 'getTrackingDetail']);
 
     });
 });

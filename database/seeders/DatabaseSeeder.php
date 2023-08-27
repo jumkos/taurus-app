@@ -50,9 +50,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             DivisionSeeder::class,
-            ProductSeeder::class,
             RegionSeeder::class,
             BranchSeeder::class,
+            ProductTypeSeeder::class,
+            ProductCategorySeeder::class,
         ]);
     }
 }
