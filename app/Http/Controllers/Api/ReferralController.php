@@ -217,9 +217,6 @@ class ReferralController extends Controller
             ->get();
         foreach ($myListReferal as &$ref) {
             $id = $ref->id;
-            // $alphabet = range('A', 'Z');
-            // $result = ($id + 10000) % 9000 + 1000;
-            // $ref->uniq_no = sprintf('%s-%04d%s', $alphabet[substr(strlen((string)$id), -1)], $result, $alphabet[substr($id, 0, 1)]);
             $ref->uniq_no = $this->generateRandomAlphanumericString(5,  $id);
         }
         $response = ['myListReferal' => $myListReferal];
