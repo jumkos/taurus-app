@@ -57,8 +57,13 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('list-region', [ReferralController::class, 'getListRegion']);
         Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
         Route::get('list-refer-name/{divisionId}/{regionId}/{branchLocationId}', [ReferralController::class, 'getListToReferName']);
-        Route::get('list-my-referal', [ReferralController::class, 'getMyListReferal']);
+        Route::get('list-my-referral', [ReferralController::class, 'getMyListReferral']);
         Route::get('get-tracking-detail/{referralId}', [ReferralController::class, 'getTrackingDetail']);
+        Route::get('get-my-request', [ReferralController::class, 'getMyRequestReferral']);
+        Route::get('get-referral-detail/{referralId}', [ReferralController::class, 'getReferalDetail']);
+        Route::get('get-referral-doc/{referralId}', [ReferralController::class, 'getReferalDocuments']);
+        Route::get('download-doc/{docName}', [ReferralController::class, 'downloadDocuments']);
+        Route::get('get-new-req-count', [ReferralController::class, 'getNewRequestCount']);
 
     });
 });

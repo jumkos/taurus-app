@@ -196,7 +196,7 @@ class ReferralController extends Controller
         return response($response, 200);
     }
 
-    public function getMyListReferal()
+    public function getMyListReferral()
     {
         $user = auth()->user();
 
@@ -215,8 +215,31 @@ class ReferralController extends Controller
             ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
             ->where('r.issuer_id', $user->id)
             ->get();
+        foreach ($myListReferal as &$ref) {
+            $id = $ref->id;
+            // $alphabet = range('A', 'Z');
+            // $result = ($id + 10000) % 9000 + 1000;
+            // $ref->uniq_no = sprintf('%s-%04d%s', $alphabet[substr(strlen((string)$id), -1)], $result, $alphabet[substr($id, 0, 1)]);
+            $ref->uniq_no = $this->generateRandomAlphanumericString(5,  $id);
+        }
         $response = ['myListReferal' => $myListReferal];
         return response($response, 200);
+    }
+
+    function generateRandomAlphanumericString($length, $seed) {
+        mt_srand($seed); // Seed the random number generator
+
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = mt_rand(0, $charactersLength - 1);
+            $randomString .= $characters[$randomIndex];
+        }
+
+        return $randomString;
     }
 
     public function getTrackingDetail($referralId)
@@ -238,6 +261,109 @@ class ReferralController extends Controller
 
         $tracking -> detail = $dt;
         $response = ['tracking' => $tracking];
+        return response($response, 200);
+    }
+
+    public function getMyRequestReferral()
+    {
+        $user = auth()->user();
+
+        $myRequestListReferal = DB::table('referrals as r')
+            ->join(DB::raw('(
+            SELECT REFERRAL_ID, MAX(`date`) AS MAX_STATUS_DATE
+            FROM referral_statuses
+            GROUP BY REFERRAL_ID
+        ) latest_status'), 'r.id', '=', 'latest_status.REFERRAL_ID')
+            ->join('referral_statuses as rs', function ($join) {
+                $join->on('r.id', '=', 'rs.REFERRAL_ID')
+                    ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
+            })
+            ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
+            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
+            ->where('r.refer_id', $user->id)
+            ->get();
+        $response = ['myRequestListReferal' => $myRequestListReferal];
+        return response($response, 200);
+    }
+
+    public function getReferalDetail($referralId)
+    {
+        $referalDetail = DB::table('referrals as r')
+            ->join(DB::raw('(
+            SELECT REFERRAL_ID, MAX(`date`) AS MAX_STATUS_DATE
+            FROM referral_statuses
+            GROUP BY REFERRAL_ID
+        ) latest_status'), 'r.id', '=', 'latest_status.REFERRAL_ID')
+            ->join('referral_statuses as rs', function ($join) {
+                $join->on('r.id', '=', 'rs.REFERRAL_ID')
+                    ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
+            })
+            ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
+            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->join('user_details as ud2', 'r.issuer_id', '=', 'ud2.user_id')
+            ->join('users as u', 'r.issuer_id', '=', 'u.id')
+            ->join('product_types as pt', 'r.product_type_id', '=', 'pt.id')
+            ->join('product_categories as pc', 'r.product_category_id', '=', 'pc.id')
+            ->select('r.id', 'ud2.name as issuer_name', 'u.nip as issuer_nip', 'r.cust_name', 'r.phone', 'r.address', 'r.offering_date', 'pt.name as product_type', 'pc.name as product_category', 'r.product_detail as product','r.nominal', 'r.info')
+            ->where('r.id', $referralId)
+            ->get();
+        $response = ['referalDetail' => $referalDetail];
+        return response($response, 200);
+    }
+
+    public function getReferalDocuments($referralId)
+    {
+        $referalDocument = DB::table('documents')
+            ->select('id', 'name as show_name', 'name as hiden_name')
+            ->where('referral_id', $referralId)
+            ->get();
+
+        foreach ($referalDocument as &$doc) {
+            $lastUd = strripos($doc->show_name, '_');
+            $lastDt = strripos($doc->show_name, '.');
+            $uniq = substr($doc->show_name, $lastUd, $lastDt-$lastUd);
+            $doc->show_name = str_replace($uniq,'',$doc->show_name);
+        }
+        $response = ['referalDocument' => $referalDocument];
+        return response($response, 200);
+    }
+
+    public function downloadDocuments($docName)
+    {
+
+        $lastUd = strripos($docName, '_');
+        $lastDt = strripos($docName, '.');
+        $uniq = substr($docName, $lastUd, $lastDt-$lastUd);
+        $newDocname = str_replace($uniq,'',$docName);
+        $filecontent = Storage::disk('ftp')->get($docName); // read file content
+           // download file.
+           return response($filecontent, '200', array(
+                'Content-Type' => 'application/octet-stream',
+                'Content-Disposition' => 'attachment; filename="'.$newDocname.'"'
+            ));
+    }
+
+    public function getNewRequestCount()
+    {
+
+        $user = auth()->user();
+
+        $newRequest = DB::table('referrals as r')
+            ->join(DB::raw('(
+                SELECT REFERRAL_ID, MAX(`date`) AS MAX_STATUS_DATE
+                FROM referral_statuses
+                GROUP BY REFERRAL_ID
+            ) latest_status'), 'r.id', '=', 'latest_status.REFERRAL_ID')
+            ->join('referral_statuses as rs', function ($join) {
+                $join->on('r.id', '=', 'rs.REFERRAL_ID')
+                    ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
+            })
+            ->select('*')
+            ->where('r.refer_id', $user->id)
+            ->where('rs.status_id', 1)
+            ->count();
+        $response = ['new_request' => $newRequest];
         return response($response, 200);
     }
 }
