@@ -304,7 +304,7 @@ class ReferralController extends Controller
             ->join('product_categories as pc', 'r.product_category_id', '=', 'pc.id')
             ->select('r.id', 'ud2.name as issuer_name', 'u.nip as issuer_nip', 'r.cust_name', 'r.phone', 'r.address', 'r.offering_date', 'pt.name as product_type', 'pc.name as product_category', 'r.product_detail as product','r.nominal', 'r.info')
             ->where('r.id', $referralId)
-            ->get();
+            ->first();
         $response = ['referalDetail' => $referalDetail];
         return response($response, 200);
     }
