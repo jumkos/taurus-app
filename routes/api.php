@@ -23,6 +23,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     //public route
     Route::post('register', [PassportAuthController::class, 'register']);
     Route::post('login', [PassportAuthController::class, 'login']);
+    Route::get('list-division', [ReferralController::class, 'getListDivision']);
+    Route::get('list-region', [ReferralController::class, 'getListRegion']);
+    Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
 
     //Forgot Password
     Route::post('forgot-password', [PassportAuthController::class, 'forgotPassword']);
@@ -43,6 +46,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     ->middleware(['throttle:6,1'])
     ->name('verification.send');
 
+
+
     //authenticated route
     Route::middleware('auth:api', 'verified')->group(function () {
         Route::get('get-user', [PassportAuthController::class, 'userInfo']);
@@ -53,9 +58,9 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('list-product-type', [ReferralController::class, 'getListProductType']);
         Route::get('list-product-categories/{productTypeId}', [ReferralController::class, 'getListProductCategory']);
         Route::get('list-status-referral/{currentStatusId}', [ReferralController::class, 'getListStatusReferral']);
-        Route::get('list-divisoin', [ReferralController::class, 'getListDivision']);
-        Route::get('list-region', [ReferralController::class, 'getListRegion']);
-        Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
+        // Route::get('list-divisoin', [ReferralController::class, 'getListDivision']);
+        // Route::get('list-region', [ReferralController::class, 'getListRegion']);
+        // Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
         Route::get('list-refer-name/{divisionId}/{regionId}/{branchLocationId}', [ReferralController::class, 'getListToReferName']);
         Route::get('list-my-referal', [ReferralController::class, 'getMyListReferal']);
         Route::get('get-tracking-detail/{referralId}', [ReferralController::class, 'getTrackingDetail']);
