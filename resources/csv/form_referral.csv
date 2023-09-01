@@ -1,0 +1,18 @@
+Marketing Name,marketingName,label,1,0,0,1
+Employee Number,nip,label,1,0,0,1
+Customer Name,custName,text,1,3,250,1
+Phone Number,phone,text,1,6,15,1
+Address,address,text,1,3,1000,1
+Offering Date,offeringDate,datePicker,1,0,0,1
+Product Type,productType,select,1,0,0,1
+Product Category,productCatogory,select,1,0,0,1
+Product,product,text,1,3,250,1
+Nominal,nominal,text,1,1,15,1
+Other information,info,text,1,3,1000,1
+Upload Documents,files,upload,1,0,0,1
+Division,division,select,1,0,0,1
+Region,region,select,1,0,0,1
+Branch Location,branch,select,1,0,0,1
+Name,name,select,1,0,0,1
+Status,status,select,1,0,0,2
+Details,detail,text,1,3,255,2

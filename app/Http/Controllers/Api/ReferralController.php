@@ -101,7 +101,7 @@ class ReferralController extends Controller
         $validator = Validator::make($request->all(), [
             'referral_id' => 'required|integer',
             'status' => 'required|integer',
-            'detail' => 'required|string',
+            'detail' => 'required|string|max:255',
         ]);
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
@@ -361,6 +361,16 @@ class ReferralController extends Controller
             ->where('rs.status_id', 1)
             ->count();
         $response = ['new_request' => $newRequest];
+        return response($response, 200);
+    }
+
+    public function getForm($formtipe)
+    {
+        $form = DB::table('form_referrals')
+            ->select('label', 'value', 'tipe', 'mandatory', 'min_lenght', 'max_lenght')
+            ->where('form', $formtipe)
+            ->get();
+        $response = ['form' => $form];
         return response($response, 200);
     }
 }

@@ -67,6 +67,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('get-referral-doc/{referralId}', [ReferralController::class, 'getReferalDocuments']);
         Route::get('download-doc/{docName}', [ReferralController::class, 'downloadDocuments']);
         Route::get('get-new-req-count', [ReferralController::class, 'getNewRequestCount']);
-
+        Route::get('get-form/{formtipe}', [ReferralController::class, 'getForm']);
     });
 });
