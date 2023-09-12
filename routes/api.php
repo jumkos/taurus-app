@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CommandController;
 use App\Http\Controllers\API\PassportAuthController;
 use App\Http\Controllers\API\ReferralController;
 use App\Http\Controllers\VerifyEmailController;
@@ -46,7 +47,11 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     ->middleware(['throttle:6,1'])
     ->name('verification.send');
 
-
+    //Command
+    Route::get('do-migrate', [CommandController::class, 'migrate']);
+    Route::get('do-seed', [CommandController::class, 'seed']);
+    Route::get('do-passport-install', [CommandController::class, 'passportInstall']);
+    Route::get('do-key-generate', [CommandController::class, 'keyGenerate']);
 
     //authenticated route
     Route::group(['middleware' => ['auth:api', 'verified']], function () {

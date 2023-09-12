@@ -34,6 +34,7 @@ class ReferralController extends Controller
             'info' => 'required|string|max:1000',
             'files' => 'required',
             'files.*' => 'required|max:2048',
+            'relation' => 'required|string|max:1000',
         ]);
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
@@ -52,7 +53,8 @@ class ReferralController extends Controller
             "product_id" => $request['product_id'],
             "nominal" => $request['nominal'],
             "info" => $request['info'],
-            "product_detail" => $request['product_detail']
+            "product_detail" => $request['product_detail'],
+            "relation" => $request['relation'],
         );
         $referral = Referral::create($newReferral);
 

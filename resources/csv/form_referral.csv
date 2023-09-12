@@ -1,5 +1,5 @@
-Marketing Name,marketingName,label,1,0,0,1
-Employee Number,nip,label,1,0,0,1
+Marketing Name,marketingName,text,1,0,0,1
+Employee Number,nip,text,1,0,0,1
 Customer Name,custName,text,1,3,250,1
 Phone Number,phone,text,1,6,15,1
 Address,address,text,1,3,1000,1
@@ -14,5 +14,6 @@ Division,division,select,1,0,0,1
 Region,region,select,1,0,0,1
 Branch Location,branch,select,1,0,0,1
 Name,name,select,1,0,0,1
+Relation,relation,text,1,3,1000,1
 Status,status,select,1,0,0,2
 Details,detail,text,1,3,255,2

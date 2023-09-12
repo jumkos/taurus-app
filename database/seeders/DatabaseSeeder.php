@@ -54,6 +54,7 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             ProductTypeSeeder::class,
             ProductCategorySeeder::class,
+            FormReferralSeeder::class
         ]);
     }
 }
