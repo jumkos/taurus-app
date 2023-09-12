@@ -18,7 +18,7 @@ class FormReferralSeeder extends Seeder
         $now = Carbon::now();
         $csv = new CsvtoArray();
         $file = __DIR__.'/../../resources/csv/form_referral.csv';
-        $header = ['label','value','tipe','mandatory','min_lenght','max_lenght','form'];
+        $header = ['label','value','tipe','mandatory','min_lenght','max_lenght','form','display_order'];
         $data = $csv->csv_to_array($file, $header);
         $data = array_map(function ($arr) use ($now) {
             return $arr + ['created_at' => $now, 'updated_at' => $now];

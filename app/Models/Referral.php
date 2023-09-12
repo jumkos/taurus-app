@@ -21,7 +21,9 @@ class Referral extends Model
         'nominal',
         'info',
         'product_detail',
-        'relation'
+        'relation',
+        'referantor',
+        'contact_person'
     ];
 
     public function getRefID()
