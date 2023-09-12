@@ -154,7 +154,8 @@ class PassportAuthController extends Controller
                         ->join('divisions', 'user_details.division_id', '=', 'divisions.id')
                         ->join('regions', 'user_details.region_id', '=', 'regions.id')
                         ->join('branches', 'user_details.branch_location_id', '=', 'branches.id')
-                        ->select('user_details.name', 'divisions.name as division', 'regions.name as region', 'branches.name as branch')
+                        ->join('users', 'users.id', '=', 'user_details.user_id')
+                        ->select('user_details.name', 'divisions.name as division', 'regions.name as region', 'branches.name as branch', 'users.nip as nip', 'user_id as id')
                         ->where('user_id', $user->id)
                         ->first();
         $user->user_details = $userDetails;
