@@ -25,7 +25,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('referrals', function (Blueprint $table) {
-            //
+            $table->removeColumn('issuer_rating');
+            $table->removeColumn('issuer_comment');
+            $table->removeColumn('refer_rating');
+            $table->removeColumn('refer_comment');
         });
     }
 };

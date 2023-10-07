@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\CommandController;
 use App\Http\Controllers\API\PassportAuthController;
 use App\Http\Controllers\API\ReferralController;
+use App\Http\Controllers\Api\ReportingController;
 use App\Http\Controllers\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -73,5 +74,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('download-doc/{docName}', [ReferralController::class, 'downloadDocuments']);
         Route::get('get-new-req-count', [ReferralController::class, 'getNewRequestCount']);
         Route::get('get-form/{formtipe}', [ReferralController::class, 'getForm']);
+        Route::get('get-ranking', [ReportingController::class, 'rankPerDivision']);
     });
 });
