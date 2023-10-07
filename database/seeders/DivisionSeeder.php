@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DivisionSeeder extends Seeder
 {
@@ -12,27 +14,15 @@ class DivisionSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        \App\Models\Division::create([
-            'name' => 'Enterprise Banking',
-        ]);
-        \App\Models\Division::create([
-            'name' => 'Transaction Banking',
-        ]);
-        \App\Models\Division::create([
-            'name' => 'Financial Institution',
-        ]);
-        \App\Models\Division::create([
-            'name' => 'SME Banking',
-        ]);
-        \App\Models\Division::create([
-            'name' => 'Consumer - Mortgage',
-        ]);
-        \App\Models\Division::create([
-            'name' => 'Consumer - Personal Loan',
-        ]);
-        \App\Models\Division::create([
-            'name' => 'Consumer - Credit Card',
-        ]);
+            $now = Carbon::now();
+            $csv = new CsvtoArray();
+            $file = __DIR__.'/../../resources/csv/divisions.csv';
+            $header = ['name'];
+            $data = $csv->csv_to_array($file, $header);
+            $data = array_map(function ($arr) use ($now) {
+                return $arr + ['created_at' => $now, 'updated_at' => $now];
+            }, $data);
+
+            DB::table('divisions')->insertOrIgnore($data);
     }
 }

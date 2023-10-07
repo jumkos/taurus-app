@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ReferralCreated;
 use App\Models\Document;
+use App\Models\NewRefMailData;
 use App\Models\Referral;
 use App\Models\ReferralStatus;
 use App\Models\StatusParameter;
@@ -11,6 +13,8 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -98,6 +102,27 @@ class ReferralController extends Controller
         );
         ReferralStatus::create($newReferralStatus);
 
+        //TODO: notif email ke refer
+        $userIssuer = DB::table('users as u')
+            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+            ->select('u.email', 'ud.name')
+            ->where('u.id', $request['issuer_id'])
+            ->first();
+        $userRefer = DB::table('users as u')
+            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+            ->select('u.email', 'ud.name')
+            ->where('u.id', $request['refer_id'])
+            ->first();
+        $mailData = (object) (array(
+            "addressFrom" => $userIssuer->email,
+            "nameFrom" => $userIssuer->name,
+            "nameTo" => $userRefer->name,
+            "customerName" => $request['cust_name'],
+            "customerPhone" => $request['phone'],
+        ));
+        Log::info($userIssuer->email);
+        Log::info($mailData->addressFrom);
+        Mail::to($userRefer->email)->send(new ReferralCreated($mailData));
         $response = ['message' => 'New Refferal has ben sent'];
         return response($response, 200);
     }

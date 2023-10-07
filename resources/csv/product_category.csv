@@ -1,11 +1,18 @@
 Funding,Current Account
 Funding,Saving Account
 Funding,Time Deposit
-Lending,Credit Card
 Lending,Loan
 Lending,Secured Loan
 Lending,SME/Corp Loan
 Lending,Unsecured Loan
+Lending,Overdraft
+Lending,Demand Loan
+Lending,Time Loan
+Lending,Trade Finance
+Lending,Credit Card
+Lending,Mortgage
+Lending,Vehicle Credit
+Lending,Personal Loan
 TPP,Insurance
 TPP,Investment
 TPP,Mutual Fund
