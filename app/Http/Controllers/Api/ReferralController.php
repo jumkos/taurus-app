@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Fluent;
 
 class ReferralController extends Controller
 {
@@ -127,25 +128,61 @@ class ReferralController extends Controller
 
     public function updateReferralStatus(Request $request)
     {
+
+        $finalSts = [5, 6, 7];
         $validator = Validator::make($request->all(), [
             'referral_id' => 'required|integer',
             'status' => 'required|integer',
             'detail' => 'required|string|max:255',
+
         ]);
+        $validator->sometimes('rating', 'required|integer|min:1|max:5', function (Fluent $input) {
+            $finalSts = [5, 6, 7];
+            return in_array($input->status, $finalSts);
+        });
+        $validator->sometimes('comment', 'required|string|max:255', function (Fluent $input) {
+            $finalSts = [5, 6, 7];
+            return in_array($input->status, $finalSts);
+        });
+
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
         }
 
-        //save referral status
-        $newReferralStatus = array(
-            "referral_id" => $request['referral_id'],
-            "date" => date('Y-m-d H:i:s'),
-            "status_id" => $request['status'],
-            "detail" => $request['detail'],
-        );
-        ReferralStatus::create($newReferralStatus);
+        $response = ['message' => 'Rating has ben updated'];
+        $user = auth()->user();
+        $referrals = Referral::where('id', $request['referral_id'])->first();
 
-        $response = ['message' => 'Refferal status has ben updated'];
+        if($user->id!=$referrals->issuer_id){
+            //save referral status
+            $newReferralStatus = array(
+                "referral_id" => $request['referral_id'],
+                "date" => date('Y-m-d H:i:s'),
+                "status_id" => $request['status'],
+                "detail" => $request['detail'],
+            );
+            ReferralStatus::create($newReferralStatus);
+            $response = ['message' => 'Refferal status has ben updated'];
+        }
+
+        //saving rating and comment
+        if(in_array($request['status'], $finalSts)){
+            switch ($user->id) {
+                case $referrals->issuer_id:
+                    $referrals->refer_rating = $request['rating'];
+                    $referrals->refer_comment = $request['comment'];
+                    $referrals->save();
+                    break;
+
+                default:
+                    $referrals->issuer_rating = $request['rating'];
+                    $referrals->issuer_comment = $request['comment'];
+                    $referrals->save();
+                    break;
+            }
+        }
+
+
         return response($response, 200);
     }
 
