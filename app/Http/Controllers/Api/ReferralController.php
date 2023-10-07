@@ -120,8 +120,6 @@ class ReferralController extends Controller
             "customerName" => $request['cust_name'],
             "customerPhone" => $request['phone'],
         ));
-        Log::info($userIssuer->email);
-        Log::info($mailData->addressFrom);
         Mail::to($userRefer->email)->send(new ReferralCreated($mailData));
         $response = ['message' => 'New Refferal has ben sent'];
         return response($response, 200);
