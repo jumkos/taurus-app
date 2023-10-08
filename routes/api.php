@@ -1,10 +1,17 @@
 <?php
 
+<<<<<<< Updated upstream
 use App\Http\Controllers\Api\CommandController;
 use App\Http\Controllers\API\PassportAuthController;
 use App\Http\Controllers\API\ReferralController;
 use App\Http\Controllers\Api\ReportingController;
 use App\Http\Controllers\VerifyEmailController;
+=======
+use app\Http\Controllers\Api\CommandController;
+use app\Http\Controllers\Api\PassportAuthController;
+use app\Http\Controllers\Api\ReferralController;
+use app\Http\Controllers\VerifyEmailController;
+>>>>>>> Stashed changes
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 

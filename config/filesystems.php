@@ -58,10 +58,10 @@ return [
 
         'ftp' => [
             'driver' => 'ftp',
-            'host' => env('FTP_HOST'),
+            'host' => env('FTP_HOST',21),
             'username' => env('FTP_USERNAME'),
             'password' => env('FTP_PASSWORD'),
-            'root' => '/taurus'
+            'root' => '/FTP'
 
             // Optional FTP Settings...
             // 'port' => env('FTP_PORT', 21),
