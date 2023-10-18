@@ -26,7 +26,7 @@ class ReferralController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'issuer_id' => 'required|integer',
-            'refer_id' => 'required|integer',
+            // 'refer_id' => 'required|integer',
             'cust_name' => 'required|string|max:250',
             'phone' => 'required|string|max:15',
             'address' => 'required|string|max:1000',
@@ -42,6 +42,9 @@ class ReferralController extends Controller
             'relation' => 'required|string|max:1000',
             'referantor' => 'required|string|max:1000',
             'contact_person' => 'required|string|max:1000',
+            'refer_to_division' => 'required|integer',
+            'refer_to_region' => 'required|integer',
+            'refer_to_branch' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
@@ -50,7 +53,7 @@ class ReferralController extends Controller
         //save referral
         $newReferral = array(
             "issuer_id" => $request['issuer_id'],
-            "refer_id" => $request['refer_id'],
+            // "refer_id" => $request['refer_id'],
             "cust_name" => $request['cust_name'],
             "phone" => $request['phone'],
             "address" => $request['address'],
@@ -64,6 +67,9 @@ class ReferralController extends Controller
             "relation" => $request['relation'],
             "referantor" => $request['referantor'],
             "contact_person" => $request['contact_person'],
+            "refer_to_division" => $request['refer_to_division'],
+            "refer_to_region" => $request['refer_to_region'],
+            "refer_to_branch" => $request['refer_to_branch'],
         );
         $referral = Referral::create($newReferral);
 
@@ -99,30 +105,30 @@ class ReferralController extends Controller
             "referral_id" => $referral->id,
             "date" => date('Y-m-d H:i:s'),
             "status_id" => 1,
-            "detail" => 'Received',
+            "detail" => 'Published',
         );
         ReferralStatus::create($newReferralStatus);
 
         //TODO: notif email ke refer
-        $userIssuer = DB::table('users as u')
-            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
-            ->select('u.email', 'ud.name')
-            ->where('u.id', $request['issuer_id'])
-            ->first();
-        $userRefer = DB::table('users as u')
-            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
-            ->select('u.email', 'ud.name')
-            ->where('u.id', $request['refer_id'])
-            ->first();
-        $mailData = (object) (array(
-            "addressFrom" => $userIssuer->email,
-            "nameFrom" => $userIssuer->name,
-            "nameTo" => $userRefer->name,
-            "customerName" => $request['cust_name'],
-            "customerPhone" => $request['phone'],
-        ));
-        Mail::to($userRefer->email)->send(new ReferralCreated($mailData));
-        $response = ['message' => 'New Refferal has ben sent'];
+        // $userIssuer = DB::table('users as u')
+        //     ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+        //     ->select('u.email', 'ud.name')
+        //     ->where('u.id', $request['issuer_id'])
+        //     ->first();
+        // $userRefer = DB::table('users as u')
+        //     ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+        //     ->select('u.email', 'ud.name')
+        //     ->where('u.id', $request['refer_id'])
+        //     ->first();
+        // $mailData = (object) (array(
+        //     "addressFrom" => $userIssuer->email,
+        //     "nameFrom" => $userIssuer->name,
+        //     "nameTo" => $userRefer->name,
+        //     "customerName" => $request['cust_name'],
+        //     "customerPhone" => $request['phone'],
+        // ));
+        // Mail::to($userRefer->email)->send(new ReferralCreated($mailData));
+        $response = ['message' => 'New Refferal has ben published'];
         return response($response, 200);
     }
 

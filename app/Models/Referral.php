@@ -27,7 +27,10 @@ class Referral extends Model
         'issuer_rating',
         'issuer_comment',
         'refer_rating',
-        'refer_comment'
+        'refer_comment',
+        'refer_to_division',
+        'refer_to_region',
+        'refer_to_branch'
     ];
 
     public function getRefID()
