@@ -488,4 +488,27 @@ class ReferralController extends Controller
         $response = ['openListReferal' => $openListReferal];
         return response($response, 200);
     }
+
+    public function takeReferral(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'referral_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $response = ['message' => 'Referral successfully taken'];
+        $user = auth()->user();
+        $updatedReferrals = DB::table('referrals')
+                    ->where('id', $request['referral_id'])
+                    ->update(['refer_id' =>  $user->id]);
+
+        if ($updatedReferrals==0) {
+            $response = ['message' => 'Failed to take the Referral'];
+        }
+
+        return response($response, 200);
+    }
 }
