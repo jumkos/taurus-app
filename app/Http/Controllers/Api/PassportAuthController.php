@@ -24,12 +24,12 @@ class PassportAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nip' => 'required|string|unique:users|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            // 'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'name' => 'required|string|max:255',
-            'division_id' => 'required|integer',
-            'region_id' => 'required|integer',
-            'branch_location_id' => 'required|integer',
+            // 'name' => 'required|string|max:255',
+            // 'division_id' => 'required|integer',
+            // 'region_id' => 'required|integer',
+            // 'branch_location_id' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
@@ -37,20 +37,25 @@ class PassportAuthController extends Controller
         $request['password'] = Hash::make($request['password']);
         $request['remember_token'] = Str::random(10);
 
+        $employee = DB::table('employees')
+            ->select('hak_akses', 'email', 'name', 'division_id', 'province_id', 'city_id')
+            ->where('nip', $request['nip'])
+            ->first();
+
         $newUser = array(
             "nip" => $request['nip'],
-            "email" => $request['email'],
+            "email" => $employee->email,
             "password" => $request['password'],
             "remember_token" => $request['remember_token'],
         );
         $user = User::create($newUser);
 
         $newUserDetail = array(
-            "name" => $request['name'],
+            "name" => $employee->name,
             "user_id" => $user->id,
-            "division_id" => $request['division_id'],
-            "region_id" => $request['region_id'],
-            "branch_location_id" => $request['branch_location_id'],
+            "division_id" => $employee->division_id,
+            "region_id" => $employee->province_id,
+            "city_id" => $employee->city_id,
         );
 
         UserDetails::create($newUserDetail);

@@ -27,7 +27,8 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('login', [PassportAuthController::class, 'login']);
     Route::get('list-division', [ReferralController::class, 'getListDivision']);
     Route::get('list-region', [ReferralController::class, 'getListRegion']);
-    Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
+    // Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
+    Route::get('list-city/{regionId}', [ReferralController::class, 'getListCity']);
 
     //Forgot Password
     Route::post('forgot-password', [PassportAuthController::class, 'forgotPassword']);

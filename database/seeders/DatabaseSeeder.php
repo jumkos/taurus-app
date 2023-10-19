@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
             'parrent_id' => 2,
         ]);
         \App\Models\StatusParameter::create([
-            'name' => 'Not Approved',
+            'name' => 'Declined',
             'parrent_id' => 4,
         ]);
         \App\Models\StatusParameter::create([
@@ -51,10 +51,12 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DivisionSeeder::class,
             RegionSeeder::class,
-            BranchSeeder::class,
+            CitySeeder::class,
+            // BranchSeeder::class,
             ProductTypeSeeder::class,
             ProductCategorySeeder::class,
-            FormReferralSeeder::class
+            FormReferralSeeder::class,
+            EmployeeSeeder::class
         ]);
     }
 }

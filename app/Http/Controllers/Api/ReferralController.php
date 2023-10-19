@@ -44,7 +44,7 @@ class ReferralController extends Controller
             'contact_person' => 'required|string|max:1000',
             'refer_to_division' => 'required|integer',
             'refer_to_region' => 'required|integer',
-            'refer_to_branch' => 'required|integer',
+            'refer_to_city' => 'required|integer',
         ]);
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
@@ -172,6 +172,7 @@ class ReferralController extends Controller
         }
 
         //saving rating and comment
+        //TODO: save rating & rating_by(jumlah yg merating) ke user_detail
         if(in_array($request['status'], $finalSts)){
             switch ($user->id) {
                 case $referrals->issuer_id:
@@ -253,6 +254,16 @@ class ReferralController extends Controller
             ->where('regions_id', $regionId)
             ->get();
         $response = ['branches' => $branches];
+        return response($response, 200);
+    }
+
+    public function getListCity($regionId)
+    {
+        $branches = DB::table('cities')
+            ->select('id', 'name')
+            ->where('regions_id', $regionId)
+            ->get();
+        $response = ['cities' => $branches];
         return response($response, 200);
     }
 

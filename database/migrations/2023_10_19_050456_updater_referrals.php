@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('referrals', function (Blueprint $table) {
             $table->integer('refer_to_division');
             $table->integer('refer_to_region');
-            $table->integer('refer_to_branch');
+            $table->integer('refer_to_city');
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
         Schema::table('referrals', function (Blueprint $table) {
             $table->removeColumn('refer_to_division');
             $table->removeColumn('refer_to_region');
-            $table->removeColumn('refer_to_branch');
+            $table->removeColumn('refer_to_city');
         });
     }
 };
