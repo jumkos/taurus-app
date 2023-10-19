@@ -45,6 +45,7 @@ class PassportAuthController extends Controller
         $newUser = array(
             "nip" => $request['nip'],
             "email" => $employee->email,
+            "hak_akses" => $employee->hak_akses,
             "password" => $request['password'],
             "remember_token" => $request['remember_token'],
         );
@@ -158,9 +159,9 @@ class PassportAuthController extends Controller
         $userDetails = DB::table('user_details')
                         ->join('divisions', 'user_details.division_id', '=', 'divisions.id')
                         ->join('regions', 'user_details.region_id', '=', 'regions.id')
-                        ->join('branches', 'user_details.branch_location_id', '=', 'branches.id')
+                        ->join('cities', 'user_details.city_id', '=', 'cities.id')
                         ->join('users', 'users.id', '=', 'user_details.user_id')
-                        ->select('user_details.name', 'divisions.name as division', 'regions.name as region', 'branches.name as branch', 'users.nip as nip', 'user_id as id')
+                        ->select('user_details.name', 'divisions.name as division', 'regions.name as region', 'cities.name as city', 'users.nip as nip', 'user_id as id')
                         ->where('user_id', $user->id)
                         ->first();
         $user->user_details = $userDetails;
