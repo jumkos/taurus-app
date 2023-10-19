@@ -185,9 +185,21 @@ class ReferralController extends Controller
                     $referrals->issuer_rating = $request['rating'];
                     $referrals->issuer_comment = $request['comment'];
                     $referrals->save();
+                    if($request['status']==7){
+                        DB::table('user_details')
+                                ->where('user_id', $user->id)
+                                ->increment('point', $referrals->nominal/10000000);
+                    }
                     break;
             }
         }
+        //save rating & rating_by ke user_detail
+        DB::table('user_details')
+                        ->where('user_id', $user->id)
+                        ->increment('rating', $request['rating']);
+        DB::table('user_details')
+                        ->where('user_id', $user->id)
+                        ->increment('rating_by', 1);
 
 
         return response($response, 200);
