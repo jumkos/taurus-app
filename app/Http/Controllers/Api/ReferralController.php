@@ -150,6 +150,10 @@ class ReferralController extends Controller
             $finalSts = [5, 6, 7];
             return in_array($input->status, $finalSts);
         });
+        $validator->sometimes('approved_nominal', 'required|integer', function (Fluent $input) {
+            $finalSts = [7];
+            return in_array($input->status, $finalSts);
+        });
 
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
@@ -172,7 +176,6 @@ class ReferralController extends Controller
         }
 
         //saving rating and comment
-        //TODO: save rating & rating_by(jumlah yg merating) ke user_detail
         if(in_array($request['status'], $finalSts)){
             switch ($user->id) {
                 case $referrals->issuer_id:
@@ -186,9 +189,13 @@ class ReferralController extends Controller
                     $referrals->issuer_comment = $request['comment'];
                     $referrals->save();
                     if($request['status']==7){
+                        DB::table('referrals')
+                                ->where('id', $request['referral_id'])
+                                ->update(['approved_nominal' => $request['approved_nominal']]);
+
                         DB::table('user_details')
                                 ->where('user_id', $user->id)
-                                ->increment('point', $referrals->nominal/10000000);
+                                ->increment('point', $referrals->approved_nominal/10000000);
                     }
                     break;
             }
