@@ -156,14 +156,38 @@ class PassportAuthController extends Controller
     {
 
         $user = auth()->user();
+
+        $rating = DB::table('user_details')
+                        ->join('users', 'users.id', '=', 'user_details.user_id')
+                        ->select('user_details.rating','user_details.rating_by')
+                        ->where('user_id', $user->id)
+                        ->first();
+
+        $avgRating = $rating->rating / $rating->rating_by;
+
+
         $userDetails = DB::table('user_details')
                         ->join('divisions', 'user_details.division_id', '=', 'divisions.id')
                         ->join('regions', 'user_details.region_id', '=', 'regions.id')
                         ->join('cities', 'user_details.city_id', '=', 'cities.id')
                         ->join('users', 'users.id', '=', 'user_details.user_id')
-                        ->select('user_details.name', 'divisions.name as division', 'regions.name as region', 'cities.name as city', 'users.nip as nip', 'user_id as id')
+                        ->select('user_id as id','user_details.name', 'divisions.name as division', 'regions.name as region', 'cities.name as city', 'users.nip as nip', 'user_details.point','user_details.rating_by')
                         ->where('user_id', $user->id)
                         ->first();
+
+        $rankOrder = DB::table('user_details')
+                        ->orderBy('point', 'desc')
+                        ->orderBy('updated_at', 'desc')
+                        ->get();
+
+        $position = $rankOrder->search(function ($rankOrder) use ($user){
+            return $rankOrder->user_id == $user->id;
+        });
+
+        $position = $position + 1;
+
+        $userDetails->avg_rating = $avgRating;
+        $userDetails->current_rank = $position;
         $user->user_details = $userDetails;
         $response = ['user' => $user];
         return response($response, 200);
