@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\CommandController;
-use App\Http\Controllers\API\PassportAuthController;
-use App\Http\Controllers\API\ReferralController;
+use App\Http\Controllers\Api\PassportAuthController;
+use App\Http\Controllers\Api\ReferralController;
 use App\Http\Controllers\Api\ReportingController;
 use App\Http\Controllers\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
