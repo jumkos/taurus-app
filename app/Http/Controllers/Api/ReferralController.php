@@ -461,13 +461,24 @@ class ReferralController extends Controller
     {
         $user = auth()->user();
 
+        // $rating = DB::table('user_details')
+        //                 ->join('users', 'users.id', '=', 'user_details.user_id')
+        //                 ->select('user_details.rating','user_details.rating_by')
+        //                 ->where('user_id', $user->id)
+        //                 ->first();
+
+        // $avgRating = $rating->rating / $rating->rating_by;
+
         $userDetail = DB::table('user_details')
                         ->where('user_id', $user->id)
+                        ->select('division_id', 'region_id', 'city_id', 'rating_by')
                         ->first();
 
         $openListReferal = DB::table('referrals as r')
             ->join('regions as rg', 'r.refer_to_region', '=', 'rg.id')
-            ->select('r.id', 'r.cust_name', 'r.nominal', 'rg.name as province')
+            ->join('user_details as ud', 'r.issuer_id', '=', 'ud.user_id')
+            ->select('r.id', 'r.cust_name', 'r.nominal', 'rg.name as province', 'ud.rating_by')
+            ->select(DB::raw('r.id, r.cust_name, r.nominal, rg.name as province, ud.rating_by, (ud.rating/ud.rating_by) as issuer_rating'))
             ->whereNot('r.issuer_id', $user->id)
             ->whereNull('r.refer_id')
             ->where('r.refer_to_division', $userDetail->division_id)
