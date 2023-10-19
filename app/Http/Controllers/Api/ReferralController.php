@@ -69,7 +69,7 @@ class ReferralController extends Controller
             "contact_person" => $request['contact_person'],
             "refer_to_division" => $request['refer_to_division'],
             "refer_to_region" => $request['refer_to_region'],
-            "refer_to_branch" => $request['refer_to_branch'],
+            "refer_to_city" => $request['refer_to_city'],
         );
         $referral = Referral::create($newReferral);
 
@@ -454,6 +454,27 @@ class ReferralController extends Controller
             ->where('form', $formtipe)
             ->get();
         $response = ['form' => $form];
+        return response($response, 200);
+    }
+
+    public function getListOpenReferral()
+    {
+        $user = auth()->user();
+
+        $userDetail = DB::table('user_details')
+                        ->where('user_id', $user->id)
+                        ->first();
+
+        $openListReferal = DB::table('referrals as r')
+            ->join('regions as rg', 'r.refer_to_region', '=', 'rg.id')
+            ->select('r.id', 'r.cust_name', 'r.nominal', 'rg.name as province')
+            ->whereNot('r.issuer_id', $user->id)
+            ->whereNull('r.refer_id')
+            ->where('r.refer_to_division', $userDetail->division_id)
+            ->where('r.refer_to_region', $userDetail->region_id)
+            ->where('r.refer_to_city', $userDetail->city_id)
+            ->get();
+        $response = ['openListReferal' => $openListReferal];
         return response($response, 200);
     }
 }

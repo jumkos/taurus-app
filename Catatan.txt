@@ -8,3 +8,25 @@ Zoom 2023-08-13
 Referal dengan uniq code id
 login dengan NIP
 
+Zoom 2023-10-10
+DB NIP unuk divisi email (untuk reg find detail by NIP) ---- data blm ada
+Referal dibuat untuk dirayak.--create(done).
+    -endpoint untuk all open Referal+avg star publiser
+    -Referal terbatas untuk divisi dan region yg sama
+Sistem poin per 10jt=1poin, jika rank sama lebih tinggi yg duluan
+TODO:
+-ubah registrasi, hanya input NIP dan password (DONE)
+-user tambah hak akses (DONE)
+    -1: create ref, do ref, ref_status, report
+    -2: create ref, ref_status, report
+-/get-user tambah avg-rating, point, current_rank (DONE)
+
+-endpoint untuk all open Referal+avg star publiser
+-endpoint untuk take referal
+-hitung point untuk user setelah referal
+
+-endpoint get top 3 rank
+-endpoint report
+
+--
+perbaiki link email verif

@@ -30,7 +30,7 @@ class Referral extends Model
         'refer_comment',
         'refer_to_division',
         'refer_to_region',
-        'refer_to_branch'
+        'refer_to_city'
     ];
 
     public function getRefID()

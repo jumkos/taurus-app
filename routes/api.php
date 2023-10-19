@@ -76,5 +76,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('get-new-req-count', [ReferralController::class, 'getNewRequestCount']);
         Route::get('get-form/{formtipe}', [ReferralController::class, 'getForm']);
         Route::get('get-ranking', [ReportingController::class, 'rankPerDivision']);
+        Route::get('get-open-referral', [ReferralController::class, 'getListOpenReferral']);
     });
 });
