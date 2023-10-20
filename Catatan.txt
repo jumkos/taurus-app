@@ -21,12 +21,13 @@ TODO:
     -2: create ref, ref_status, report
 -/get-user tambah avg-rating, point, current_rank (DONE)
 
--endpoint untuk all open Referal+avg star publiser
--endpoint untuk take referal
--hitung point untuk user setelah referal
+-endpoint untuk all open Referal+avg star publiser (DONE)
+-endpoint untuk take referal (DONE)
+-hitung point untuk user setelah referal (DONE)
+-tambah field approved nominal pada referal (DONE)
 
 -endpoint get top 3 rank
--endpoint report
+-endpoint report"
 
 --
 perbaiki link email verif
