@@ -61,7 +61,7 @@ class PassportAuthController extends Controller
 
         UserDetails::create($newUserDetail);
         // $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-
+        $user->name = $employee->name;
         event(new Registered($user));
         $response = ['message' => 'Email verification has ben sent'];
         return response($response, 200);

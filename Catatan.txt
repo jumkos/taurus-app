@@ -26,8 +26,8 @@ TODO:
 -hitung point untuk user setelah referal (DONE)
 -tambah field approved nominal pada referal (DONE)
 
--endpoint get top 3 rank
+-endpoint get top 3 rank (DONE)
 -endpoint report"
 
 --
-perbaiki link email verif
+perbaiki link email verif (DONE)
