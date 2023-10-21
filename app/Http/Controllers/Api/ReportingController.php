@@ -49,7 +49,21 @@ class ReportingController extends Controller
             ->limit(3)
             ->get();
 
-            $response = ['ranking' => $ranking];
-            return response($response, 200);
+        $response = ['ranking' => $ranking];
+        return response($response, 200);
+    }
+
+    public function referralLeaderBoard()
+    {
+        $rankOrder = DB::table('user_details')
+            ->join('divisions', 'divisions.id', '=', 'user_details.division_id')
+            ->select(DB::raw('ROW_NUMBER() OVER (ORDER BY point DESC, user_details.updated_at DESC) AS no, user_details.name,ROUND(user_details.point,2) AS point,divisions.name as division'))
+            ->orderBy('point', 'desc')
+            ->orderBy('user_details.updated_at', 'desc')
+            ->limit(3)
+            ->get();
+
+        $response = ['ranking' => $rankOrder];
+        return response($response, 200);
     }
 }
