@@ -159,11 +159,16 @@ class PassportAuthController extends Controller
 
         $rating = DB::table('user_details')
                         ->join('users', 'users.id', '=', 'user_details.user_id')
-                        ->select('user_details.rating','user_details.rating_by')
+                        ->select(DB::raw('IFNULL(user_details.rating,0) AS rating, IFNULL(user_details.rating_by,0) AS rating_by'))
                         ->where('user_id', $user->id)
                         ->first();
 
-        $avgRating = $rating->rating / $rating->rating_by;
+            if ($rating->rating_by != 0) {
+                $avgRating = $rating->rating / $rating->rating_by;
+            }else{
+                $avgRating = 0;
+            }
+
 
 
         $userDetails = DB::table('user_details')
@@ -171,7 +176,7 @@ class PassportAuthController extends Controller
                         ->join('regions', 'user_details.region_id', '=', 'regions.id')
                         ->join('cities', 'user_details.city_id', '=', 'cities.id')
                         ->join('users', 'users.id', '=', 'user_details.user_id')
-                        ->select('user_id as id','user_details.name', 'divisions.name as division', 'regions.name as region', 'cities.name as city', 'users.nip as nip', 'user_details.point','user_details.rating_by')
+                        ->select(DB::raw('user_id as id,user_details.name, divisions.name as division, regions.name as region, cities.name as city, users.nip as nip, IFNULL(user_details.point,0) AS point, IFNULL(user_details.rating_by,0) AS rating_by'))
                         ->where('user_id', $user->id)
                         ->first();
 
@@ -192,5 +197,19 @@ class PassportAuthController extends Controller
         $response = ['user' => $user];
         return response($response, 200);
 
+    }
+
+    public function getUserByNIP($nip)
+    {
+        $userName = DB::table('employees')
+            ->select('name')
+            ->where('nip', $nip)
+            ->first();
+
+        if ($userName == '') {
+            return response(['errors' => 'Employee data not found'], 404);
+        }
+
+        return response(['employee' => $userName->name], 200);
     }
 }

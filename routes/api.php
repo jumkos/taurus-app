@@ -25,6 +25,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     //public route
     Route::post('register', [PassportAuthController::class, 'register']);
     Route::post('login', [PassportAuthController::class, 'login']);
+    Route::get('getUserByNIP/{nip}', [PassportAuthController::class, 'getUserByNIP']);
     Route::get('list-division', [ReferralController::class, 'getListDivision']);
     Route::get('list-region', [ReferralController::class, 'getListRegion']);
     // Route::get('list-branch/{regionId}', [ReferralController::class, 'getListBranch']);
