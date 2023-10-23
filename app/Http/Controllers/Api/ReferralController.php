@@ -383,6 +383,11 @@ class ReferralController extends Controller
             ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
             ->where('r.refer_id', $user->id)
             ->get();
+
+        foreach ($myRequestListReferal as &$ref) {
+            $id = $ref->id;
+            $ref->uniq_no = $this->generateRandomAlphanumericString(5,  $id);
+        }
         $response = ['myRequestListReferal' => $myRequestListReferal];
         return response($response, 200);
     }
