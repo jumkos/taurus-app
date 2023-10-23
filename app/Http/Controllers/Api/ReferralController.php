@@ -344,9 +344,10 @@ class ReferralController extends Controller
     public function getTrackingDetail($referralId)
     {
         $tracking = DB::table('referrals as r')
-            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
-            ->join('divisions as d', 'd.id', '=', 'ud.division_id')
-            ->select('r.cust_name', 'r.phone', 'r.address', 'ud.name as refer_name', 'd.name as refer_division')
+            ->leftJoin('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->join('divisions as d', 'd.id', '=', 'r.refer_to_division')
+            ->join('regions as rg','rg.id','=', 'r.refer_to_region')
+            ->select('r.cust_name', 'r.phone', 'r.address', 'ud.name as refer_name', 'd.name as refer_division', 'rg.name as refer_province')
             ->where('r.id', $referralId)
             ->first();
 
