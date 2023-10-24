@@ -519,6 +519,7 @@ class ReferralController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'referral_id' => 'required|integer',
+            'user_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -526,10 +527,10 @@ class ReferralController extends Controller
         }
 
         $response = ['message' => 'Referral successfully taken'];
-        $user = auth()->user();
+
         $updatedReferrals = DB::table('referrals')
                     ->where('id', $request['referral_id'])
-                    ->update(['refer_id' =>  $user->id]);
+                    ->update(['refer_id' =>  $request['user_id']]);
 
         if ($updatedReferrals==0) {
             $response = ['message' => 'Failed to take the Referral'];
