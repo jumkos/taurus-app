@@ -379,7 +379,7 @@ class ReferralController extends Controller
                     ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
             })
             ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
-            ->left('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
             ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
             ->where('r.refer_id', $user->id)
             ->get();
