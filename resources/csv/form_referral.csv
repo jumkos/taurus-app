@@ -12,10 +12,10 @@ Product Category,productCatogory,select,1,0,0,1,11
 Product,product,text,1,3,250,1,12
 Nominal,nominal,text,1,1,15,1,13
 Other information,info,text,1,3,1000,1,14
-Upload Documents,files,upload,1,0,0,1,15
+Upload Documents,files,file,1,0,0,1,15
 Division,division,select,1,0,0,1,16
 Region,region,select,1,0,0,1,17
-Branch Location,branch,select,1,0,0,1,18
+City,city,select,1,0,0,1,18
 Name,name,select,1,0,0,1,19
 Status,status,select,1,0,0,2,1
 Details,detail,text,1,3,255,2,1
