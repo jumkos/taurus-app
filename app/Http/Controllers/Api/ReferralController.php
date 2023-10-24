@@ -538,4 +538,30 @@ class ReferralController extends Controller
 
         return response($response, 200);
     }
+
+    public function listUserToTakeReferral(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'referral_id' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $user = auth()->user();
+        $listUser = DB::table('referrals as r')
+                        ->join('user_details as ud', function (JoinClause $join) {
+                        $join->on('r.refer_to_division', '=', 'ud.division_id')
+                                ->on('r.refer_to_region', '=', 'ud.region_id')
+                                ->on('r.refer_to_city', '=', 'ud.city_id');
+                    })
+                    ->select('ud.user_id as user_id','ud.name as name')
+                    ->where('r.id', $request['referral_id'])
+                    ->whereNot('ud.user_id', $user->id)
+                    // ->toSql();
+                    ->get();
+
+        return response($listUser, 200);
+    }
 }

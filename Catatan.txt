@@ -32,5 +32,5 @@ TODO:
 --
 perbaiki link email verif (DONE)
 
-Tambah id user pada ref
-Tambah api list user can take
+Tambah id user pada ref (DONE)
+Tambah api list user can take (DONE)

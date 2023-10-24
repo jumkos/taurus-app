@@ -80,5 +80,6 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::get('get-open-referral', [ReferralController::class, 'getListOpenReferral']);
         Route::post('take-referral', [ReferralController::class, 'takeReferral']);
         Route::get('get-leader-board', [ReportingController::class, 'referralLeaderBoard']);
+        Route::post('list-user-to-take', [ReferralController::class, 'listUserToTakeReferral']);
     });
 });
