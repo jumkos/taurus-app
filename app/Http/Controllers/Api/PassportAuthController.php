@@ -30,6 +30,7 @@ class PassportAuthController extends Controller
             // 'division_id' => 'required|integer',
             // 'region_id' => 'required|integer',
             // 'branch_location_id' => 'required|integer',
+            'phone' => 'required|string',
         ]);
         if ($validator->fails()) {
             return response(['errors' => $validator->errors()->all()], 422);
@@ -57,6 +58,7 @@ class PassportAuthController extends Controller
             "division_id" => $employee->division_id,
             "region_id" => $employee->province_id,
             "city_id" => $employee->city_id,
+            "phone" => $request['phone']
         );
 
         UserDetails::create($newUserDetail);
@@ -176,7 +178,7 @@ class PassportAuthController extends Controller
                         ->join('regions', 'user_details.region_id', '=', 'regions.id')
                         ->join('cities', 'user_details.city_id', '=', 'cities.id')
                         ->join('users', 'users.id', '=', 'user_details.user_id')
-                        ->select(DB::raw('user_id as id,user_details.name, divisions.name as division, regions.name as region, cities.name as city, users.nip as nip, IFNULL(user_details.point,0) AS point, IFNULL(user_details.rating_by,0) AS rating_by'))
+                        ->select(DB::raw('user_id as id,user_details.name, divisions.name as division, regions.name as region, cities.name as city, users.nip as nip, IFNULL(user_details.point,0) AS point, IFNULL(user_details.rating_by,0) AS rating_by, user_details.phone as phone'))
                         ->where('user_id', $user->id)
                         ->first();
 
