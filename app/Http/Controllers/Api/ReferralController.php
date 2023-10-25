@@ -354,7 +354,7 @@ class ReferralController extends Controller
         $dt = DB::table('referral_statuses as rs')
                     ->join('status_parameters as s', 'rs.status_id', '=', 's.id')
                     ->join('referrals as r', 'rs.referral_id', '=', 'r.id')
-                    ->select('rs.date', 'rs.detail as remark', 's.name as status')
+                    ->select('rs.date', 'rs.detail as remark', 's.name as status', 's.id as status_id')
                     ->where('r.id', $referralId)
                     ->orderBy('rs.date', 'asc')
                     ->get();
@@ -379,7 +379,7 @@ class ReferralController extends Controller
                     ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
             })
             ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
-            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->join('user_details as ud', 'r.issuer_id', '=', 'ud.user_id')
             ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
             ->where('r.refer_id', $user->id)
             ->get();
