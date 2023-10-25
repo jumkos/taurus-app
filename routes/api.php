@@ -83,3 +83,12 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('list-user-to-take', [ReferralController::class, 'listUserToTakeReferral']);
     });
 });
+
+//no json
+Route::group(['middleware' => ['cors']], function () {
+
+    //authenticated route
+    Route::group(['middleware' => ['auth:api', 'verified']], function () {
+        Route::get('referral-report', [ReportingController::class, 'referralReport']);
+    });
+});

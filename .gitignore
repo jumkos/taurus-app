@@ -20,3 +20,4 @@ yarn-error.log
 .DB/
 .filezila/
 .FZ/
+app/Exports/ReferralReportExport.php

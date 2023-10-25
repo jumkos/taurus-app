@@ -73,7 +73,11 @@ class ReportingController extends Controller
     {
 
         $user = auth()->user();
-        return Excel::download(new ReferralReportExport($user->id), 'report.xlsx');
+        $userName = DB::table('user_details as ud')
+            ->where('ud.user_id','=', $user->id)
+            ->select('ud.name')
+            ->first();
+        return Excel::download(new ReferralReportExport($user->id, $userName->name), 'report.xlsx');
     }
 
     function generateRandomAlphanumericString($length, $seed) {
