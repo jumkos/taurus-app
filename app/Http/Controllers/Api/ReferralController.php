@@ -331,6 +331,10 @@ class ReferralController extends Controller
             ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
             ->leftJoin('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
             ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
+            ->addSelect(DB::raw('CASE
+                                    WHEN r.created_at <= DATE_SUB(CURDATE(), INTERVAL 7 DAY) THEN 1
+                                    ELSE 0
+                                END  as expired '))
             ->where('r.issuer_id', $user->id)
             ->get();
         foreach ($myListReferal as &$ref) {
