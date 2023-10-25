@@ -9,6 +9,7 @@ use App\Models\NewRefMailData;
 use App\Models\Referral;
 use App\Models\ReferralStatus;
 use App\Models\StatusParameter;
+use Carbon\Carbon;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
@@ -506,6 +507,7 @@ class ReferralController extends Controller
             ->join('product_categories as pc','pc.id','=', 'r.product_category_id')
             // ->select('r.id', 'r.cust_name', 'r.nominal', 'rg.name as province', 'ud.rating_by')
             ->select(DB::raw('r.id, r.cust_name, r.nominal, rg.name as province, ud.rating_by, (ud.rating/ud.rating_by) as issuer_rating, ud.name as isuuer_name, pc.name as product'))
+            ->whereDate('r.created_at', '>=', Carbon::today()->subDays(7)->toDateString() )
             ->whereNot('r.issuer_id', $user->id)
             ->whereNull('r.refer_id')
             ->where('r.refer_to_division', $userDetail->division_id)
