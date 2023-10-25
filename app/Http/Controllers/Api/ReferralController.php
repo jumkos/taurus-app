@@ -183,6 +183,12 @@ class ReferralController extends Controller
                     $referrals->refer_rating = $request['rating'];
                     // $referrals->refer_comment = $request['comment'];
                     $referrals->save();
+                    DB::table('user_details')
+                        ->where('user_id', $referrals->refer_id)
+                        ->increment('rating', $request['rating']);
+                    DB::table('user_details')
+                                    ->where('user_id', $referrals->refer_id)
+                                    ->increment('rating_by', 1);
                     break;
 
                 default:
@@ -196,20 +202,28 @@ class ReferralController extends Controller
 
                         DB::table('user_details')
                                 ->where('user_id', $user->id)
-                                ->increment('point', $referrals->approved_nominal/10000000);
+                                ->increment('point', $request['approved_nominal']/10000000);
                     }
+
+                    DB::table('user_details')
+                                    ->where('user_id', $referrals->issuer_id)
+                                    ->increment('rating', $request['rating']);
+                    DB::table('user_details')
+                                    ->where('user_id', $referrals->issuer_id)
+                                    ->increment('rating_by', 1);
+
                     break;
             }
         }
         //save rating & rating_by ke user_detail
-        if(in_array($request['status'], $finalSts)){
-        DB::table('user_details')
-                        ->where('user_id', $user->id)
-                        ->increment('rating', $request['rating']);
-        DB::table('user_details')
-                        ->where('user_id', $user->id)
-                        ->increment('rating_by', 1);
-        }
+        // if(in_array($request['status'], $finalSts)){
+        // DB::table('user_details')
+        //                 ->where('user_id', $user->id)
+        //                 ->increment('rating', $request['rating']);
+        // DB::table('user_details')
+        //                 ->where('user_id', $user->id)
+        //                 ->increment('rating_by', 1);
+        // }
 
         return response($response, 200);
     }
