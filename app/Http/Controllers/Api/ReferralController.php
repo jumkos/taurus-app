@@ -201,13 +201,14 @@ class ReferralController extends Controller
             }
         }
         //save rating & rating_by ke user_detail
+        if(in_array($request['status'], $finalSts)){
         DB::table('user_details')
                         ->where('user_id', $user->id)
                         ->increment('rating', $request['rating']);
         DB::table('user_details')
                         ->where('user_id', $user->id)
                         ->increment('rating_by', 1);
-
+        }
 
         return response($response, 200);
     }
