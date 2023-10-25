@@ -467,7 +467,7 @@ class ReferralController extends Controller
             })
             ->select('*')
             ->where('r.refer_id', $user->id)
-            ->where('rs.status_id', 1)
+            ->where('rs.status_id', '<','5')
             ->count();
         $response = ['new_request' => $newRequest];
         return response($response, 200);
