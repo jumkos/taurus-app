@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\ReferralReportExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportingController extends Controller
 {
@@ -65,5 +67,28 @@ class ReportingController extends Controller
 
         $response = ['ranking' => $rankOrder];
         return response($response, 200);
+    }
+
+    public function referralReport()
+    {
+
+        $user = auth()->user();
+        return Excel::download(new ReferralReportExport($user->id), 'report.xlsx');
+    }
+
+    function generateRandomAlphanumericString($length, $seed) {
+        mt_srand($seed); // Seed the random number generator
+
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+
+        $randomString = '';
+
+        for ($i = 0; $i < $length; $i++) {
+            $randomIndex = mt_rand(0, $charactersLength - 1);
+            $randomString .= $characters[$randomIndex];
+        }
+
+        return $randomString;
     }
 }
