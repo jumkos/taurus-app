@@ -146,10 +146,10 @@ class ReferralController extends Controller
             $finalSts = [5, 6, 7];
             return in_array($input->status, $finalSts);
         });
-        $validator->sometimes('comment', 'required|string|max:255', function (Fluent $input) {
-            $finalSts = [5, 6, 7];
-            return in_array($input->status, $finalSts);
-        });
+        // $validator->sometimes('comment', 'required|string|max:255', function (Fluent $input) {
+        //     $finalSts = [5, 6, 7];
+        //     return in_array($input->status, $finalSts);
+        // });
         $validator->sometimes('approved_nominal', 'required|integer', function (Fluent $input) {
             $finalSts = [7];
             return in_array($input->status, $finalSts);
@@ -180,13 +180,13 @@ class ReferralController extends Controller
             switch ($user->id) {
                 case $referrals->issuer_id:
                     $referrals->refer_rating = $request['rating'];
-                    $referrals->refer_comment = $request['comment'];
+                    // $referrals->refer_comment = $request['comment'];
                     $referrals->save();
                     break;
 
                 default:
                     $referrals->issuer_rating = $request['rating'];
-                    $referrals->issuer_comment = $request['comment'];
+                    // $referrals->issuer_comment = $request['comment'];
                     $referrals->save();
                     if($request['status']==7){
                         DB::table('referrals')
