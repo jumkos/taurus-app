@@ -380,7 +380,7 @@ class ReferralController extends Controller
             })
             ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
             ->join('user_details as ud', 'r.issuer_id', '=', 'ud.user_id')
-            ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status')
+            ->select('r.id', 'r.cust_name', 'r.created_at', 'ud.name as assigned_to', 's.name as status', 'rs.id as status_id')
             ->where('r.refer_id', $user->id)
             ->get();
 
