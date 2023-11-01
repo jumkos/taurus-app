@@ -577,8 +577,10 @@ class ReferralController extends Controller
                                 ->on('r.refer_to_region', '=', 'ud.region_id')
                                 ->on('r.refer_to_city', '=', 'ud.city_id');
                     })
+                    ->join('users as u', 'u.id', '=', 'ud.user_id')
                     ->select('ud.user_id as user_id','ud.name as name')
                     ->where('r.id', $request['referral_id'])
+                    ->where('u.hak_akses', 1)
                     ->whereNot('ud.user_id', $user->id)
                     // ->toSql();
                     ->get();
