@@ -127,6 +127,10 @@ class ReferralController extends Controller
             ->where('ud.region_id', $request['refer_to_region'])
             ->where('ud.city_id', $request['refer_to_city'])
             ->get();
+        $productCategory = DB::table('product_categories as pc')
+            ->select('pc.name')
+            ->where('pc.id', $request['product_category_id'])
+            ->first();
 
         foreach ($userRefers as $userRefer) {
             $mailData = (object) (array(
@@ -137,7 +141,8 @@ class ReferralController extends Controller
                 "region" => $userRefer->region,
                 "city" => $userRefer->city,
                 "customerName" => $request['cust_name'],
-                "customerPhone" => $request['phone'],
+                "nominal" => number_format($request['nominal']),
+                "product" => $productCategory->name,
             ));
             Mail::to($userRefer->email)->send(new ReferralCreated($mailData));
         }

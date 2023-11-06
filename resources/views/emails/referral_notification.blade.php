@@ -46,8 +46,9 @@
     <p>I just create a referral opportunity to your division in {{ $mailData->city }}, {{ $mailData->region }}. This is a prime chance to boost our customer base and drive growth in our local market.</p>
     <p><strong>Referral Details:</strong></p>
     <ul>
+        <li>Product Categories: {{ $mailData->product }}</li>
         <li>Customer Name: {{ $mailData->customerName }}</li>
-        <li>Customer Phone: {{ $mailData->customerPhone }}</li>
+        <li>Referral Nominal: IDR {{ $mailData->nominal }}</li>
     </ul>
     <p><strong>How to Get Involved:</strong></p>
     <ul>
