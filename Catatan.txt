@@ -34,3 +34,12 @@ perbaiki link email verif (DONE)
 
 Tambah id user pada ref (DONE)
 Tambah api list user can take (DONE)
+
+---
+- Nanti kalo udh kirim referral, ada notif broadcast ke semua yg termasuk groupnya. (DONE)
+- Tiap update status, nanti yg ngasih referal dikirimi email.
+- Data report, tambahin thousand (DONE)
+- report all
+- Pointnya masuknya ke pemberi referral (DONE)
+- Forget password : kirim email
+- Perubahan eform

@@ -133,6 +133,7 @@ class ReferralReportExport implements FromCollection, WithHeadings, ShouldAutoSi
             $tempName = $rep->marketing_name;
             $rep->marketing_name = $rep->approved_limit / 10000000;
             $rep->point = $tempName;
+            $rep->approved_limit = number_format($rep->approved_limit);
             $this->row = $this->row + 1;
         }
         return $report;

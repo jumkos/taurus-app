@@ -219,7 +219,7 @@ class ReferralController extends Controller
                                 ->update(['approved_nominal' => $request['approved_nominal']]);
 
                         DB::table('user_details')
-                                ->where('user_id', $user->id)
+                                ->where('user_id', $referrals->issuer_id)
                                 ->increment('point', $request['approved_nominal']/10000000);
                     }
 
