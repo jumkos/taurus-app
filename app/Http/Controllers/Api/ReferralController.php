@@ -110,24 +110,38 @@ class ReferralController extends Controller
         ReferralStatus::create($newReferralStatus);
 
         //TODO: notif email ke refer
-        // $userIssuer = DB::table('users as u')
-        //     ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
-        //     ->select('u.email', 'ud.name')
-        //     ->where('u.id', $request['issuer_id'])
-        //     ->first();
-        // $userRefer = DB::table('users as u')
-        //     ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
-        //     ->select('u.email', 'ud.name')
-        //     ->where('u.id', $request['refer_id'])
-        //     ->first();
-        // $mailData = (object) (array(
-        //     "addressFrom" => $userIssuer->email,
-        //     "nameFrom" => $userIssuer->name,
-        //     "nameTo" => $userRefer->name,
-        //     "customerName" => $request['cust_name'],
-        //     "customerPhone" => $request['phone'],
-        // ));
-        // Mail::to($userRefer->email)->send(new ReferralCreated($mailData));
+        $userIssuer = DB::table('users as u')
+            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+            ->select('u.email', 'ud.name')
+            ->where('u.id', $request['issuer_id'])
+            ->first();
+        $userRefers = DB::table('users as u')
+            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+            ->join('divisions as d','ud.division_id','=','d.id')
+            ->join('regions as r','ud.region_id','=','r.id')
+            ->join('cities as c','ud.city_id','=','c.id')
+            ->select('u.email', 'ud.name', 'd.name as division', 'r.name as region', 'c.name as city')
+            ->where('u.hak_akses', 1)
+            ->whereNot('u.id', $request['issuer_id'])
+            ->where('ud.division_id', $request['refer_to_division'])
+            ->where('ud.region_id', $request['refer_to_region'])
+            ->where('ud.city_id', $request['refer_to_city'])
+            ->get();
+
+        foreach ($userRefers as $userRefer) {
+            $mailData = (object) (array(
+                "addressFrom" => $userIssuer->email,
+                "nameFrom" => $userIssuer->name,
+                "nameTo" => $userRefer->name,
+                "division" => $userRefer->division,
+                "region" => $userRefer->region,
+                "city" => $userRefer->city,
+                "customerName" => $request['cust_name'],
+                "customerPhone" => $request['phone'],
+            ));
+            Mail::to($userRefer->email)->send(new ReferralCreated($mailData));
+        }
+
         $response = ['message' => 'New Refferal has ben published'];
         return response($response, 200);
     }

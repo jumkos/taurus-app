@@ -32,7 +32,7 @@ class ReferralCreated extends Mailable
     {
         return new Envelope(
             from: new Address($this->mailData->addressFrom, $this->mailData->nameFrom),
-            subject: 'Referral Created',
+            subject: 'Open Referral Opportunity in '.$this->mailData->division.' - '.$this->mailData->city.', '.$this->mailData->region,
         );
     }
 

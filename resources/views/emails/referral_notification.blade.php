@@ -42,12 +42,24 @@
     </style>
 </head>
 <body>
-    <p>Hello, {{ $mailData->nameTo }}</p>
-    <p>I just create a referral for you form Taurus application.</p>
-    <p>Referral Details:</p>
+    <p>Dear {{ $mailData->division }} Team,</p>
+    <p>I just create a referral opportunity to your division in {{ $mailData->city }}, {{ $mailData->region }}. This is a prime chance to boost our customer base and drive growth in our local market.</p>
+    <p><strong>Referral Details:</strong></p>
     <ul>
-        <li><strong>Customer Name:</strong> {{ $mailData->customerName }}</li>
-        <li><strong>Customer Phone:</strong> {{ $mailData->customerPhone }}</li>
+        <li>Customer Name: {{ $mailData->customerName }}</li>
+        <li>Customer Phone: {{ $mailData->customerPhone }}</li>
     </ul>
+    <p><strong>How to Get Involved:</strong></p>
+    <ul>
+        <li>1. Log in to your Taurus account</li>
+        <li>2. Navigate to the "Referral Dashboard" section</li>
+        <li>3. Locate the referral opportunity on behalf of {{ $mailData->customerName }} created by {{ $mailData->nameFrom }}.</li>
+        <li>4. Take the first step by clicking "Process"</li>
+    </ul>
+    <p>Don't let this opportunity slip away. New customers are the lifeblood of our division's success, and this referral is a direct path to achieving that growth.</p>
+    <p>Thank you for your dedication to our division's success. Let's work together to make the most of this opportunity and expand our customer base in {{ $mailData->city }}, {{ $mailData->region }}.</p>
+    <br></br>
+    <p>Best regards,</p>
+    <p>{{ $mailData->nameFrom }}</p>
 </body>
 </html>
