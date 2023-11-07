@@ -31,7 +31,7 @@ class ReferralCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData->addressFrom, $this->mailData->nameFrom),
+            // from: new Address($this->mailData->addressFrom, $this->mailData->nameFrom),
             subject: 'Open Referral Opportunity in '.$this->mailData->division.' - '.$this->mailData->city.', '.$this->mailData->region,
         );
     }
@@ -42,7 +42,7 @@ class ReferralCreated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.referral_notification',
+            markdown: 'mail.referral_notification',
         );
     }
 

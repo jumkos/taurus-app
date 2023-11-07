@@ -31,7 +31,7 @@ class ReferralUpdated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address($this->mailData->addressFrom, $this->mailData->nameFrom),
+            // from: new Address($this->mailData->addressFrom, $this->mailData->nameFrom),
             subject: 'Referral Status Update: '.$this->mailData->refCode.' - '.$this->mailData->newStatus,
         );
     }
@@ -42,7 +42,7 @@ class ReferralUpdated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.update_referral_notification',
+            markdown: 'mail.update_referral_notification',
         );
     }
 
