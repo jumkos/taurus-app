@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ReferralCreated;
+use App\Mail\ReferralUpdated;
 use App\Models\Document;
 use App\Models\NewRefMailData;
 use App\Models\Referral;
@@ -109,7 +110,7 @@ class ReferralController extends Controller
         );
         ReferralStatus::create($newReferralStatus);
 
-        //TODO: notif email ke refer
+        //notif email ke refer
         $userIssuer = DB::table('users as u')
             ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
             ->select('u.email', 'ud.name')
@@ -182,6 +183,22 @@ class ReferralController extends Controller
         $user = auth()->user();
         $referrals = Referral::where('id', $request['referral_id'])->first();
 
+
+        $prevStatus = DB::table('referrals as r')
+                    ->join(DB::raw('(
+                    SELECT REFERRAL_ID, MAX(`date`) AS MAX_STATUS_DATE
+                    FROM referral_statuses
+                    GROUP BY REFERRAL_ID
+                ) latest_status'), 'r.id', '=', 'latest_status.REFERRAL_ID')
+                    ->join('referral_statuses as rs', function ($join) {
+                        $join->on('r.id', '=', 'rs.REFERRAL_ID')
+                            ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
+                    })
+                    ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
+            ->select('s.name')
+            ->where('r.id', $request['referral_id'])
+            ->first();
+
         if($user->id!=$referrals->issuer_id){
             //save referral status
             $newReferralStatus = array(
@@ -242,6 +259,34 @@ class ReferralController extends Controller
         //                 ->where('user_id', $user->id)
         //                 ->increment('rating_by', 1);
         // }
+
+        //notif email ke refer
+        $userIssuer = DB::table('users as u')
+            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+            ->select('u.email', 'ud.name')
+            ->where('u.id', $referrals->issuer_id)
+            ->first();
+        $userRefer = DB::table('users as u')
+            ->join('user_details as ud', 'u.id', '=', 'ud.user_id')
+            ->select('u.email', 'ud.name')
+            ->where('u.id', $user->id)
+            ->first();
+        $newStatus = DB::table('status_parameters as s')
+            ->select('s.name')
+            ->where('s.id', $request['status'])
+            ->first();
+
+        $mailData = (object) (array(
+                "addressFrom" => $userRefer->email,
+                "nameFrom" => $userRefer->name,
+                "nameTo" => $userIssuer->name,
+                "refCode" => $this->generateRandomAlphanumericString(5,  $referrals->id),
+                "prevStatus" => $prevStatus->name,
+                "newStatus" => $newStatus->name,
+                "customerName" => $referrals->cust_name,
+                "updateDate" => date('Y-m-d'),
+        ));
+        Mail::to($userIssuer->email)->send(new ReferralUpdated($mailData));
 
         return response($response, 200);
     }

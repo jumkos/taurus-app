@@ -37,9 +37,9 @@ Tambah api list user can take (DONE)
 
 ---
 - Nanti kalo udh kirim referral, ada notif broadcast ke semua yg termasuk groupnya. (DONE)
-- Tiap update status, nanti yg ngasih referal dikirimi email.
+- Tiap update status, nanti yg ngasih referal dikirimi email. (DONE)
 - Data report, tambahin thousand (DONE)
 - report all
 - Pointnya masuknya ke pemberi referral (DONE)
 - Forget password : kirim email
-- Perubahan eform
+- Perubahan eform (DONE)
