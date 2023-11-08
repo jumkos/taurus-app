@@ -65,7 +65,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
         Route::post('create-referral', [ReferralController::class, 'createReferral']);
         Route::post('update-referral-sts', [ReferralController::class, 'updateReferralStatus']);
         Route::get('list-product-type', [ReferralController::class, 'getListProductType']);
-        Route::get('list-product-categories/{productTypeId}', [ReferralController::class, 'getListProductCategory']);
+        Route::get('list-product-categories', [ReferralController::class, 'getListProductCategory']);
         Route::get('list-status-referral/{currentStatusId}', [ReferralController::class, 'getListStatusReferral']);
         Route::get('list-refer-name/{divisionId}/{regionId}/{branchLocationId}', [ReferralController::class, 'getListToReferName']);
         Route::get('list-my-referral', [ReferralController::class, 'getMyListReferral']);

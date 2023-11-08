@@ -41,5 +41,5 @@ Tambah api list user can take (DONE)
 - Data report, tambahin thousand (DONE)
 - report all
 - Pointnya masuknya ke pemberi referral (DONE)
-- Forget password : kirim email
+- Forget password : kirim email (??)
 - Perubahan eform (DONE)
