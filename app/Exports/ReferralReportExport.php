@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromCollection;
@@ -122,7 +123,11 @@ class ReferralReportExport implements FromCollection, WithHeadings, ShouldAutoSi
                         ->join('status_parameters as sp', 'rs.STATUS_ID', '=', 'sp.ID')
                         ->join('product_categories as pc','pc.id', '=', 'r.product_category_id')
                         ->join('user_details as ud','ud.id','=','r.refer_id')
-                        ->where('r.issuer_id','=', $this->user_id)
+                        ->where(function (Builder $query) {
+                            $query->where('r.issuer_id','=', $this->user_id)
+                                  ->orWhereRaw('0 = ?', $this->user_id);
+                                //   ->orWhere(0, '=', $this->user_id);
+                        })
                         ->where('rs.STATUS_ID','>',4)
                         ->select('r.id as id', 'r.cust_name','pc.name as product_category','sp.name as status', 'r.approved_nominal as approved_limit', 'ud.name as marketing_name')
                         ->get();
