@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserDetails;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -152,6 +153,36 @@ class PassportAuthController extends Controller
     public function redirectForgotPassword(string $token): RedirectResponse
     {
         return redirect(env('FRONT_URL') . '/api/get-user/' . $token);
+    }
+
+    public function resetPassword(Request $request) {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+
+        if ($status === Password::PASSWORD_RESET) {
+            $response = ['message' => 'Password successfully updated'];
+            return response($response, 429);
+        } else {
+            $response = ['message' => 'Error ocurred'];
+            return response($response, 500);
+        }
     }
 
     public function userInfo()

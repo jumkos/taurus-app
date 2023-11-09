@@ -35,6 +35,7 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
     Route::post('forgot-password', [PassportAuthController::class, 'forgotPassword']);
     Route::get('/reset-password/{token}', [PassportAuthController::class, 'redirectForgotPassword'])
     ->middleware('guest')->name('password.reset');
+    Route::post('reset-password', [PassportAuthController::class, 'resetPassword']);
 
 
     //email verify route
