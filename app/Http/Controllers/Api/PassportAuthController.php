@@ -152,7 +152,7 @@ class PassportAuthController extends Controller
 
     public function redirectForgotPassword(string $token): RedirectResponse
     {
-        return redirect(env('FRONT_URL') . '/api/get-user/' . $token);
+        return redirect(env('FRONT_URL_RESET'). $token);
     }
 
     public function resetPassword(Request $request) {
@@ -178,7 +178,7 @@ class PassportAuthController extends Controller
 
         if ($status === Password::PASSWORD_RESET) {
             $response = ['message' => 'Password successfully updated'];
-            return response($response, 429);
+            return response($response, 200);
         } else {
             $response = ['message' => 'Error ocurred'];
             return response($response, 500);
