@@ -304,6 +304,7 @@ class ReferralController extends Controller
     {
         $productCategories = DB::table('product_categories')
             ->select('id', 'name')
+            ->where('product_types_id','=',2)
             ->get();
         if ($productCategories->isEmpty()) {
             return response('Not Found', 404);
