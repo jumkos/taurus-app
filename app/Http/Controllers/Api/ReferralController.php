@@ -488,12 +488,13 @@ class ReferralController extends Controller
                     ->on('latest_status.MAX_STATUS_DATE', '=', 'rs.date');
             })
             ->join('status_parameters as s', 'rs.STATUS_ID', '=', 's.ID')
-            ->join('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
+            ->leftJoin('user_details as ud', 'r.refer_id', '=', 'ud.user_id')
             ->join('user_details as ud2', 'r.issuer_id', '=', 'ud2.user_id')
             ->join('users as u', 'r.issuer_id', '=', 'u.id')
-            ->join('product_types as pt', 'r.product_type_id', '=', 'pt.id')
+            // ->join('product_types as pt', 'r.product_type_id', '=', 'pt.id')
             ->join('product_categories as pc', 'r.product_category_id', '=', 'pc.id')
-            ->select('r.id', 'ud2.name as issuer_name', 'u.nip as issuer_nip', 'r.cust_name', 'r.phone', 'r.address', 'r.offering_date', 'pt.name as product_type', 'pc.name as product_category', 'r.product_detail as product','r.nominal', 'r.info')
+            // ->select('r.id', 'ud2.name as issuer_name', 'u.nip as issuer_nip', 'r.cust_name', 'r.phone', 'IFNULL(r.address,'') as address', 'r.offering_date', 'pc.name as product_category', 'r.product_detail as product','r.nominal', 'r.info')
+            ->select(DB::raw('r.id, ud2.name as issuer_name, u.nip as issuer_nip, r.cust_name, r.phone, IFNULL(r.address,"-") as address, IFNULL(r.offering_date,"-") as offering_date, pc.name as product_category, IFNULL(r.address,"-") as address, IFNULL(r.product_detail,"-") as product, r.nominal, IFNULL(r.info,"-") as info'))
             ->where('r.id', $referralId)
             ->first();
         $response = ['referalDetail' => $referalDetail];
