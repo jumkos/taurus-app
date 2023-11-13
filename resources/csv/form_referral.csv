@@ -1,12 +1,12 @@
 Customer Name,custName,text,1,3,250,1,3
 Phone Number,phone,text,1,6,15,1,4
-Address,address,text,1,3,1000,0,5
+Address,address,text,0,3,1000,1,5
 Product Category,productCatogory,select,1,0,0,1,11
-Product Detail,product,text,1,3,250,0,12
+Product Detail,product,text,0,3,250,1,12
 Proposed (eqv to IDR),nominal,text,1,1,15,1,13
-Other Information,info,text,1,3,1000,0,14
-Upload Documents,files,file,1,0,0,0,15
-Referantor Detail,referantor,text,1,3,1000,0,6
+Other Information,info,text,0,3,1000,1,14
+Upload Documents,files,file,0,0,0,1,15
+Referantor Detail,referantor,text,0,3,1000,1,6
 Division,division,select,1,0,0,1,16
 Region,region,select,1,0,0,1,17
 City,city,select,1,0,0,1,18
