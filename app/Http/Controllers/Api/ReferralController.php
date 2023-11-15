@@ -159,7 +159,7 @@ class ReferralController extends Controller
         $validator = Validator::make($request->all(), [
             'referral_id' => 'required|integer',
             'status' => 'required|integer',
-            'detail' => 'required|string|max:255',
+            'detail' => 'string|max:255',
 
         ]);
         $validator->sometimes('rating', 'required|integer|min:1|max:5', function (Fluent $input) {
@@ -437,7 +437,8 @@ class ReferralController extends Controller
         $dt = DB::table('referral_statuses as rs')
                     ->join('status_parameters as s', 'rs.status_id', '=', 's.id')
                     ->join('referrals as r', 'rs.referral_id', '=', 'r.id')
-                    ->select('rs.date', 'rs.detail as remark', 's.name as status', 's.id as status_id')
+                    // ->select('rs.date', 'rs.detail as remark', 's.name as status', 's.id as status_id')
+                    ->select(DB::raw('rs.date, IFNULL(rs.detail,"-") as remark, s.name as status, s.id as status_id'))
                     ->where('r.id', $referralId)
                     ->orderBy('rs.date', 'asc')
                     ->get();
