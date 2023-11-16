@@ -58,10 +58,12 @@ class ReportingController extends Controller
     public function referralLeaderBoard()
     {
         $rankOrder = DB::table('user_details')
+            ->join('users', 'user_details.id', '=', 'user_details.user_id')
             ->join('divisions', 'divisions.id', '=', 'user_details.division_id')
-            ->select(DB::raw('ROW_NUMBER() OVER (ORDER BY point DESC, user_details.updated_at DESC) AS no, user_details.name,ROUND(user_details.point,2) AS point,divisions.name as division'))
+            ->select(DB::raw('ROW_NUMBER() OVER (ORDER BY point DESC, user_details.updated_at DESC, users.email_verified_at ASC) AS no, user_details.name,ROUND(user_details.point,2) AS point,divisions.name as division'))
             ->orderBy('point', 'desc')
             ->orderBy('user_details.updated_at', 'desc')
+            ->orderBy('users.email_verified_at', 'asc')
             ->limit(3)
             ->get();
 
