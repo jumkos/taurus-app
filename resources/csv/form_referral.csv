@@ -8,5 +8,5 @@ Other Information,info,text,0,3,1000,1,14
 Upload Documents,files,file,0,0,0,1,15
 Referantor Detail,referantor,text,0,3,1000,1,6
 Division,division,select,1,0,0,1,16
-Region,region,select,1,0,0,1,17
+Province,region,select,1,0,0,1,17
 City,city,select,1,0,0,1,18
