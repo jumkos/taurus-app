@@ -59,7 +59,8 @@ class PassportAuthController extends Controller
             "division_id" => $employee->division_id,
             "region_id" => $employee->province_id,
             "city_id" => $employee->city_id,
-            "phone" => $request['phone']
+            "phone" => $request['phone'],
+            "updated_at" => null,
         );
 
         UserDetails::create($newUserDetail);

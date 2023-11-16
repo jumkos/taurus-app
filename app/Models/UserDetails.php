@@ -10,7 +10,7 @@ class UserDetails extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'user_id', 'division_id', 'region_id', 'city_id', 'phone'
+        'name', 'user_id', 'division_id', 'region_id', 'city_id', 'phone','updated_at'
     ];
 
     protected $hidden = [
