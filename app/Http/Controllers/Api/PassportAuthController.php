@@ -214,7 +214,7 @@ class PassportAuthController extends Controller
                         ->first();
 
         $rankOrder = DB::table('user_details')
-                        ->join('users', 'user_details.id', '=', 'user_details.user_id')
+                        ->join('users', 'users.id', '=', 'user_details.user_id')
                         ->orderBy('user_details.point', 'desc')
                         ->orderBy('user_details.updated_at', 'desc')
                         ->orderBy('users.email_verified_at', 'asc')
