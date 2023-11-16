@@ -58,7 +58,7 @@ class ReferralController extends Controller
             "cust_name" => $request['cust_name'],
             "phone" => $request['phone'],
             "address" => $request['address'],
-            "offering_date" => date("Y-m-d"),
+            "offering_date" => date('Y-m-d H:i:s'),
             "product_type_id" => $request['product_type_id'],
             "product_category_id" => $request['product_category_id'],
             "product_id" => $request['product_id'],
