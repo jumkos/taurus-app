@@ -331,6 +331,7 @@ class ReferralController extends Controller
     {
         $divisions = DB::table('divisions')
             ->select('id', 'name')
+            ->where('akses', '=',1)
             ->get();
         $response = ['divisions' => $divisions];
         return response($response, 200);

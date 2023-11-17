@@ -17,7 +17,7 @@ class DivisionSeeder extends Seeder
             $now = Carbon::now();
             $csv = new CsvtoArray();
             $file = __DIR__.'/../../resources/csv/divisions.csv';
-            $header = ['name'];
+            $header = ['name', 'akses'];
             $data = $csv->csv_to_array($file, $header);
             $data = array_map(function ($arr) use ($now) {
                 return $arr + ['created_at' => $now, 'updated_at' => $now];
