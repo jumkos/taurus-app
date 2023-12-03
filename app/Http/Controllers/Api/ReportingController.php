@@ -76,7 +76,7 @@ class ReportingController extends Controller
 
         $user = auth()->user();
         $hak_akses = $user->hak_akses;
-        if ($hak_akses === 3) {
+        if ($hak_akses == 3) {
             return Excel::download(new ReferralReportExport(0, "All Marketing"), 'report.xlsx');
         }
         $userName = DB::table('user_details as ud')

@@ -62,7 +62,7 @@ class ReferralController extends Controller
             "product_type_id" => $request['product_type_id'],
             "product_category_id" => $request['product_category_id'],
             "product_id" => $request['product_id'],
-            "nominal" => $request['nominal'],
+            "nominal" => (float)$request['nominal'],
             "info" => $request['info'],
             "product_detail" => $request['product_detail'],
             "relation" => $request['relation'],
@@ -233,7 +233,7 @@ class ReferralController extends Controller
                     if($request['status']==7){
                         DB::table('referrals')
                                 ->where('id', $request['referral_id'])
-                                ->update(['approved_nominal' => $request['approved_nominal']]);
+                                ->update(['approved_nominal' => (float) $request['approved_nominal']]);
 
                         DB::table('user_details')
                                 ->where('user_id', $referrals->issuer_id)
